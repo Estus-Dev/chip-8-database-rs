@@ -19,6 +19,7 @@ let metadata = db.get_metadata_from_hash("0df2789f661358d8f7370e6cf93490c5bcd44b
 
 println!("ROM Title: {}", metadata.title);
 
+// Most fields are optional in the base schema
 if let Some(description) = metadata.description {
     println!("ROM Description: {description}");
 }
