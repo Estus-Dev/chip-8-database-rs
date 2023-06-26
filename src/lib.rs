@@ -37,6 +37,10 @@ impl Database {
         let mut buf = [0u8; 40];
         let hash = base16ct::lower::encode_str(&hash, &mut buf).unwrap();
 
+        self.get_metadata_from_hash(hash)
+    }
+
+    pub fn get_metadata_from_hash(&self, hash: &str) -> Option<Program> {
         log::info!("Looking up ROM with hash {hash}");
 
         self.hashes.get(hash).map(|i| {
