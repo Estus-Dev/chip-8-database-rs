@@ -58,205 +58,200 @@ impl Database {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::{
+        font::FontStyle,
+        input::{Keymap, TouchInputMode},
+        origin::OriginType,
+        platform::Platform,
+        rotation::ScreenRotation,
+    };
+    use serde_json::Result;
 
-    mod serde {
-        use crate::{
-            font::FontStyle,
-            input::{Keymap, TouchInputMode},
-            origin::OriginType,
-            platform::Platform,
-            rotation::ScreenRotation,
-        };
-
-        use super::*;
-        use serde_json::Result;
-
-        #[test]
-        fn deserialize_program() -> Result<()> {
-            let input = r##"{
-                "title": "Test Program",
-                "origin": {
-                    "type": "manual",
-                    "reference": "What's this supposed to be?"
-                },
-                "description": "A description of the program",
-                "release": "2023-06-24",
-                "copyright": "Probably copyrighted or something",
-                "license": "MIT",
-                "authors": ["Someone"],
-                "images": ["https://example.com/chip8/test-program.png"],
-                "urls": ["https://example.com/chip8/test-program.html"],
-                "roms": {
-                    "0123456789abcdef0123456789abcdef01234567": {
-                        "file": "test-program.ch8",
-                        "embeddedTitle": "Test Program Embedded",
-                        "description": "The test program to test all programs",
-                        "release": "2023-06-24",
-                        "platforms": ["originalChip8"],
-                        "quirkyPlatforms": {
-                            "originalChip8": {
-                                "shift": true,
-                                "memoryIncrementByX": false,
-                                "memoryLeaveIUnchanged": true,
-                                "wrap": false,
-                                "jump": true,
-                                "vblank": false,
-                                "logic": true
-                            }
-                        },
-                        "authors": ["Someone Else"],
-                        "images": ["https://example.com/chip8/test-program-detail.png"],
-                        "urls": ["https://example.com/chip8/test-program.ch8"],
-                        "tickrate": 10,
-                        "startAddress": 512,
-                        "screenRotation": 0,
-                        "keys": {
-                            "up": 0,
-                            "down": 1,
-                            "left": 2,
-                            "right": 3,
-                            "a": 4,
-                            "b": 5,
-                            "player2Up": 16,
-                            "player2Down": 17,
-                            "player2Left": 18,
-                            "player2Right": 19,
-                            "player2A": 20,
-                            "player2B": 21
-                        },
-                        "touchInputMode": "none",
-                        "fontStyle": "vip",
-                        "colors": {
-                            "pixels": ["#000000", "#ff0000", "#00ff00", "#0000ff"],
-                            "buzzer": "#cccccc",
-                            "silence": "#555555"
+    #[test]
+    fn deserialize_program() -> Result<()> {
+        let input = r##"{
+            "title": "Test Program",
+            "origin": {
+                "type": "manual",
+                "reference": "What's this supposed to be?"
+            },
+            "description": "A description of the program",
+            "release": "2023-06-24",
+            "copyright": "Probably copyrighted or something",
+            "license": "MIT",
+            "authors": ["Someone"],
+            "images": ["https://example.com/chip8/test-program.png"],
+            "urls": ["https://example.com/chip8/test-program.html"],
+            "roms": {
+                "0123456789abcdef0123456789abcdef01234567": {
+                    "file": "test-program.ch8",
+                    "embeddedTitle": "Test Program Embedded",
+                    "description": "The test program to test all programs",
+                    "release": "2023-06-24",
+                    "platforms": ["originalChip8"],
+                    "quirkyPlatforms": {
+                        "originalChip8": {
+                            "shift": true,
+                            "memoryIncrementByX": false,
+                            "memoryLeaveIUnchanged": true,
+                            "wrap": false,
+                            "jump": true,
+                            "vblank": false,
+                            "logic": true
                         }
+                    },
+                    "authors": ["Someone Else"],
+                    "images": ["https://example.com/chip8/test-program-detail.png"],
+                    "urls": ["https://example.com/chip8/test-program.ch8"],
+                    "tickrate": 10,
+                    "startAddress": 512,
+                    "screenRotation": 0,
+                    "keys": {
+                        "up": 0,
+                        "down": 1,
+                        "left": 2,
+                        "right": 3,
+                        "a": 4,
+                        "b": 5,
+                        "player2Up": 16,
+                        "player2Down": 17,
+                        "player2Left": 18,
+                        "player2Right": 19,
+                        "player2A": 20,
+                        "player2B": 21
+                    },
+                    "touchInputMode": "none",
+                    "fontStyle": "vip",
+                    "colors": {
+                        "pixels": ["#000000", "#ff0000", "#00ff00", "#0000ff"],
+                        "buzzer": "#cccccc",
+                        "silence": "#555555"
                     }
                 }
-            }"##;
+            }
+        }"##;
 
-            let program: Program = serde_json::from_str(input)?;
+        let program: Program = serde_json::from_str(input)?;
 
-            assert_eq!(program.title, "Test Program");
-            assert_eq!(
-                &OriginType::Manual,
-                program
-                    .origin
-                    .as_ref()
-                    .unwrap()
-                    .origin_type
-                    .as_ref()
-                    .unwrap()
-            );
-            assert_eq!(
-                "What's this supposed to be?",
-                program.origin.unwrap().reference.unwrap()
-            );
-            assert_eq!(
-                "A description of the program",
-                &program.description.unwrap()
-            );
-            assert_eq!("2023-06-24", &program.release.unwrap());
-            assert_eq!(
-                "Probably copyrighted or something",
-                &program.copyright.unwrap()
-            );
-            assert_eq!("MIT", &program.license.unwrap());
-            assert_eq!(vec!["Someone".to_owned()], program.authors.unwrap());
-            assert_eq!(
-                vec!["https://example.com/chip8/test-program.png"],
-                program.images.unwrap()
-            );
-            assert_eq!(
-                vec!["https://example.com/chip8/test-program.html"],
-                program.urls.unwrap()
-            );
+        assert_eq!(program.title, "Test Program");
+        assert_eq!(
+            &OriginType::Manual,
+            program
+                .origin
+                .as_ref()
+                .unwrap()
+                .origin_type
+                .as_ref()
+                .unwrap()
+        );
+        assert_eq!(
+            "What's this supposed to be?",
+            program.origin.unwrap().reference.unwrap()
+        );
+        assert_eq!(
+            "A description of the program",
+            &program.description.unwrap()
+        );
+        assert_eq!("2023-06-24", &program.release.unwrap());
+        assert_eq!(
+            "Probably copyrighted or something",
+            &program.copyright.unwrap()
+        );
+        assert_eq!("MIT", &program.license.unwrap());
+        assert_eq!(vec!["Someone".to_owned()], program.authors.unwrap());
+        assert_eq!(
+            vec!["https://example.com/chip8/test-program.png"],
+            program.images.unwrap()
+        );
+        assert_eq!(
+            vec!["https://example.com/chip8/test-program.html"],
+            program.urls.unwrap()
+        );
 
-            let rom = program.roms["0123456789abcdef0123456789abcdef01234567"].clone();
+        let rom = program.roms["0123456789abcdef0123456789abcdef01234567"].clone();
 
-            assert_eq!("test-program.ch8", &rom.file_name.unwrap());
-            assert_eq!("Test Program Embedded", &rom.embedded_title.unwrap());
-            assert_eq!(
-                "The test program to test all programs",
-                rom.description.unwrap()
-            );
-            assert_eq!("2023-06-24", rom.release.unwrap());
-            assert_eq!(vec![Platform::OriginalChip8], rom.platforms);
+        assert_eq!("test-program.ch8", &rom.file_name.unwrap());
+        assert_eq!("Test Program Embedded", &rom.embedded_title.unwrap());
+        assert_eq!(
+            "The test program to test all programs",
+            rom.description.unwrap()
+        );
+        assert_eq!("2023-06-24", rom.release.unwrap());
+        assert_eq!(vec![Platform::OriginalChip8], rom.platforms);
 
-            let quirks = rom.quirky_platforms.unwrap()[&Platform::OriginalChip8].clone();
+        let quirks = rom.quirky_platforms.unwrap()[&Platform::OriginalChip8].clone();
 
-            assert!(quirks.shift);
-            assert!(!quirks.memory_increment_by_x);
-            assert!(quirks.memory_leave_i_unchanged);
-            assert!(!quirks.wrap);
-            assert!(quirks.jump);
-            assert!(!quirks.vblank);
-            assert!(quirks.logic);
+        assert!(quirks.shift);
+        assert!(!quirks.memory_increment_by_x);
+        assert!(quirks.memory_leave_i_unchanged);
+        assert!(!quirks.wrap);
+        assert!(quirks.jump);
+        assert!(!quirks.vblank);
+        assert!(quirks.logic);
 
-            assert_eq!(vec!["Someone Else"], rom.authors.unwrap());
-            assert_eq!(
-                vec!["https://example.com/chip8/test-program-detail.png"],
-                rom.images.unwrap()
-            );
-            assert_eq!(
-                vec!["https://example.com/chip8/test-program.ch8"],
-                rom.urls.unwrap()
-            );
-            assert_eq!(10, rom.tickrate.unwrap());
-            assert_eq!(0x200, rom.start_address.unwrap());
-            assert_eq!(ScreenRotation::Landscape, rom.screen_rotation.unwrap());
+        assert_eq!(vec!["Someone Else"], rom.authors.unwrap());
+        assert_eq!(
+            vec!["https://example.com/chip8/test-program-detail.png"],
+            rom.images.unwrap()
+        );
+        assert_eq!(
+            vec!["https://example.com/chip8/test-program.ch8"],
+            rom.urls.unwrap()
+        );
+        assert_eq!(10, rom.tickrate.unwrap());
+        assert_eq!(0x200, rom.start_address.unwrap());
+        assert_eq!(ScreenRotation::Landscape, rom.screen_rotation.unwrap());
 
-            let keys = rom.keys.unwrap();
+        let keys = rom.keys.unwrap();
 
-            assert_eq!(0x00, keys[&Keymap::P1Up]);
-            assert_eq!(0x01, keys[&Keymap::P1Down]);
-            assert_eq!(0x02, keys[&Keymap::P1Left]);
-            assert_eq!(0x03, keys[&Keymap::P1Right]);
-            assert_eq!(0x04, keys[&Keymap::P1A]);
-            assert_eq!(0x05, keys[&Keymap::P1B]);
+        assert_eq!(0x00, keys[&Keymap::P1Up]);
+        assert_eq!(0x01, keys[&Keymap::P1Down]);
+        assert_eq!(0x02, keys[&Keymap::P1Left]);
+        assert_eq!(0x03, keys[&Keymap::P1Right]);
+        assert_eq!(0x04, keys[&Keymap::P1A]);
+        assert_eq!(0x05, keys[&Keymap::P1B]);
 
-            assert_eq!(0x10, keys[&Keymap::P2Up]);
-            assert_eq!(0x11, keys[&Keymap::P2Down]);
-            assert_eq!(0x12, keys[&Keymap::P2Left]);
-            assert_eq!(0x13, keys[&Keymap::P2Right]);
-            assert_eq!(0x14, keys[&Keymap::P2A]);
-            assert_eq!(0x15, keys[&Keymap::P2B]);
+        assert_eq!(0x10, keys[&Keymap::P2Up]);
+        assert_eq!(0x11, keys[&Keymap::P2Down]);
+        assert_eq!(0x12, keys[&Keymap::P2Left]);
+        assert_eq!(0x13, keys[&Keymap::P2Right]);
+        assert_eq!(0x14, keys[&Keymap::P2A]);
+        assert_eq!(0x15, keys[&Keymap::P2B]);
 
-            assert_eq!(TouchInputMode::None, rom.touch_input_mode.unwrap());
-            assert_eq!(FontStyle::VIP, rom.font_style.unwrap());
+        assert_eq!(TouchInputMode::None, rom.touch_input_mode.unwrap());
+        assert_eq!(FontStyle::VIP, rom.font_style.unwrap());
 
-            let colors = rom.colors.unwrap();
+        let colors = rom.colors.unwrap();
 
-            assert_eq!(
-                vec!["#000000", "#ff0000", "#00ff00", "#0000ff"],
-                colors.pixels.unwrap()
-            );
-            assert_eq!("#cccccc", colors.buzzer.unwrap());
-            assert_eq!("#555555", colors.silence.unwrap());
+        assert_eq!(
+            vec!["#000000", "#ff0000", "#00ff00", "#0000ff"],
+            colors.pixels.unwrap()
+        );
+        assert_eq!("#cccccc", colors.buzzer.unwrap());
+        assert_eq!("#555555", colors.silence.unwrap());
 
-            Ok(())
-        }
+        Ok(())
+    }
 
-        #[test]
-        fn deserialize_program_minimal() -> Result<()> {
-            let input = r##"{
-                "title": "Minimal",
-                "roms": {
-                    "0123456789abcdef0123456789abcdef01234567": {
-                        "platforms": ["originalChip8"]
-                    }
+    #[test]
+    fn deserialize_program_minimal() -> Result<()> {
+        let input = r##"{
+            "title": "Minimal",
+            "roms": {
+                "0123456789abcdef0123456789abcdef01234567": {
+                    "platforms": ["originalChip8"]
                 }
-            }"##;
+            }
+        }"##;
 
-            let program: Program = serde_json::from_str(input)?;
+        let program: Program = serde_json::from_str(input)?;
 
-            assert_eq!(program.title, "Minimal");
+        assert_eq!(program.title, "Minimal");
 
-            let rom = program.roms["0123456789abcdef0123456789abcdef01234567"].clone();
+        let rom = program.roms["0123456789abcdef0123456789abcdef01234567"].clone();
 
-            assert_eq!(vec![platform::Platform::OriginalChip8], rom.platforms);
+        assert_eq!(vec![platform::Platform::OriginalChip8], rom.platforms);
 
-            Ok(())
-        }
+        Ok(())
     }
 }
