@@ -1,5 +1,13 @@
-use serde::{Deserialize, Serialize};
-use serde_repr::{Deserialize_repr, Serialize_repr};
+pub mod color;
+pub mod font;
+pub mod input;
+pub mod origin;
+pub mod platform;
+pub mod program;
+pub mod rom;
+pub mod rotation;
+
+use program::Program;
 use sha1::{Digest, Sha1};
 use std::collections::HashMap;
 
@@ -47,202 +55,19 @@ impl Database {
     }
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
-pub struct Program {
-    title: String,
-    description: Option<String>,
-    // TODO: This should be a date of some kind
-    release: Option<String>,
-    origin: Option<Origin>,
-    copyright: Option<String>,
-    // TODO: See https://crates.io/crates/spdx
-    license: Option<String>,
-    authors: Option<Vec<String>>,
-    // TODO: Support real images here
-    images: Option<Vec<String>>,
-    // TODO: Use an appropriate URL type here
-    urls: Option<Vec<String>>,
-    // TODO: Use an appropriate type for hashes
-    roms: HashMap<String, Rom>,
-}
-
-#[non_exhaustive]
-#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
-#[serde(rename_all = "lowercase")]
-pub enum OriginType {
-    GameJam,
-    Event,
-    Magazine,
-    Manual,
-}
-
-#[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
-pub struct Origin {
-    #[serde(rename = "type")]
-    origin_type: Option<OriginType>,
-
-    reference: Option<String>,
-}
-
-#[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Rom {
-    #[serde(rename = "file")]
-    file_name: Option<String>,
-
-    embedded_title: Option<String>,
-    description: Option<String>,
-    // TODO: This should be a date of some kind
-    release: Option<String>,
-    platforms: Vec<Platform>,
-    quirky_platforms: Option<HashMap<Platform, QuirkSet>>,
-    authors: Option<Vec<String>>,
-    // TODO: Support real images here
-    images: Option<Vec<String>>,
-    // TODO: Use an appropriate URL type here
-    urls: Option<Vec<String>>,
-    tickrate: Option<usize>,
-    start_address: Option<u16>,
-    screen_rotation: Option<ScreenRotation>,
-    keys: Option<HashMap<Keymap, u8>>,
-    touch_input_mode: Option<TouchInputMode>,
-    font_style: Option<FontStyle>,
-    colors: Option<Colors>,
-}
-
-#[non_exhaustive]
-#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
-pub enum Platform {
-    #[serde(rename = "originalChip8")]
-    OriginalChip8,
-
-    #[serde(rename = "hybridVIP")]
-    HybridVIP,
-
-    #[serde(rename = "modernChip8")]
-    ModernChip8,
-
-    #[serde(rename = "chip48")]
-    Chip48,
-
-    #[serde(rename = "superchip1")]
-    Superchip1,
-
-    #[serde(rename = "superchip")]
-    Superchip,
-
-    #[serde(rename = "xochip")]
-    XOChip,
-
-    #[serde(rename = "chip8X")]
-    Chip8X,
-
-    #[serde(rename = "megachip8")]
-    MegaChip8,
-}
-
-#[derive(Clone, Debug, Default, Deserialize_repr, Eq, Hash, PartialEq, Serialize_repr)]
-#[repr(usize)]
-pub enum ScreenRotation {
-    #[default]
-    Landscape = 0,
-    Portrait = 90,
-    LandscapeFlipped = 180,
-    PortraitFlipped = 270,
-}
-
-#[non_exhaustive]
-#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
-pub enum Keymap {
-    #[serde(rename = "up")]
-    P1Up,
-
-    #[serde(rename = "down")]
-    P1Down,
-
-    #[serde(rename = "left")]
-    P1Left,
-
-    #[serde(rename = "right")]
-    P1Right,
-
-    #[serde(rename = "a")]
-    P1A,
-
-    #[serde(rename = "b")]
-    P1B,
-
-    #[serde(rename = "player2Up")]
-    P2Up,
-
-    #[serde(rename = "player2Down")]
-    P2Down,
-
-    #[serde(rename = "player2Left")]
-    P2Left,
-
-    #[serde(rename = "player2Right")]
-    P2Right,
-
-    #[serde(rename = "player2A")]
-    P2A,
-
-    #[serde(rename = "player2B")]
-    P2B,
-}
-
-#[non_exhaustive]
-#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
-#[serde(rename_all = "lowercase")]
-pub enum TouchInputMode {
-    #[default]
-    None,
-    Swipe,
-    Seg16,
-    Seg16Fill,
-    Gamepad,
-    VIP,
-}
-
-#[non_exhaustive]
-#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
-#[serde(rename_all = "lowercase")]
-pub enum FontStyle {
-    #[default]
-    VIP,
-    Octo,
-    SCHIP,
-    Dream6800,
-    ETI660,
-    Fish,
-    Akouz1,
-}
-
-#[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
-#[serde(rename_all = "camelCase", default)]
-pub struct QuirkSet {
-    shift: bool,
-    memory_increment_by_x: bool,
-    memory_leave_i_unchanged: bool,
-    wrap: bool,
-    jump: bool,
-    vblank: bool,
-    logic: bool,
-}
-
-// TODO: Better color type than strings here
-#[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
-pub struct Colors {
-    pixels: Option<Vec<String>>,
-    buzzer: Option<String>,
-    silence: Option<String>,
-}
-
 #[cfg(test)]
 mod test {
     use super::*;
 
     mod serde {
+        use crate::{
+            font::FontStyle,
+            input::{Keymap, TouchInputMode},
+            origin::OriginType,
+            platform::Platform,
+            rotation::ScreenRotation,
+        };
+
         use super::*;
         use serde_json::Result;
 
@@ -429,7 +254,7 @@ mod test {
 
             let rom = program.roms["0123456789abcdef0123456789abcdef01234567"].clone();
 
-            assert_eq!(vec![Platform::OriginalChip8], rom.platforms);
+            assert_eq!(vec![platform::Platform::OriginalChip8], rom.platforms);
 
             Ok(())
         }
