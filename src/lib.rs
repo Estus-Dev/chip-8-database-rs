@@ -20,14 +20,16 @@ pub struct Database {
 }
 
 impl Database {
-    pub fn new() -> std::io::Result<Self> {
+    pub fn new() -> Self {
         let programs = include_str!("../chip-8-database/database/programs.json");
-        let programs = serde_json::from_str(programs)?;
+        let programs = serde_json::from_str(programs)
+            .expect("programs.json is hardcoded and should never be in an invalid state");
 
         let hashes = include_str!("../chip-8-database/database/sha1-hashes.json");
-        let hashes = serde_json::from_str(hashes)?;
+        let hashes = serde_json::from_str(hashes)
+            .expect("sha1-hashes.json is hardcoded and should never be in an invalid state");
 
-        Ok(Database { programs, hashes })
+        Database { programs, hashes }
     }
 
     pub fn get_metadata(&self, rom: &[u8]) -> Option<Program> {

@@ -8,8 +8,9 @@ Easily access the data from the [CHIP-8 Database][] from Rust.
 # use chip_8_database_rs::Database;
 #
 # let rom = [0u8; 4096];
-
-let db = Database::new().unwrap();
+#
+// The CHIP-8 Database is included in this library, no need to open or download files
+let db = Database::new();
 
 // Get metadata from a rom directly
 let metadata = db.get_metadata(&rom);
