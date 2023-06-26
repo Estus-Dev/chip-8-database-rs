@@ -1,3 +1,5 @@
+#![doc = include_str!("../README.md")]
+
 pub mod color;
 pub mod font;
 pub mod input;
