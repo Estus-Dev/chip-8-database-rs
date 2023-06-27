@@ -12,6 +12,9 @@ pub enum Platform {
     #[serde(rename = "modernChip8")]
     ModernChip8,
 
+    #[serde(rename = "chip8X")]
+    Chip8X,
+
     #[serde(rename = "chip48")]
     Chip48,
 
@@ -21,14 +24,11 @@ pub enum Platform {
     #[serde(rename = "superchip")]
     Superchip,
 
-    #[serde(rename = "xochip")]
-    XOChip,
-
-    #[serde(rename = "chip8X")]
-    Chip8X,
-
     #[serde(rename = "megachip8")]
     MegaChip8,
+
+    #[serde(rename = "xochip")]
+    XOChip,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
