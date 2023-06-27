@@ -1,6 +1,8 @@
+use std::collections::HashMap;
+
 use serde::{Deserialize, Serialize};
 
-use crate::quirk::QuirkSet;
+use crate::quirk::Quirk;
 
 #[non_exhaustive]
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
@@ -34,7 +36,7 @@ pub enum Platform {
 }
 
 #[non_exhaustive]
-#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct PlatformDetails {
     pub id: Platform,
@@ -48,5 +50,5 @@ pub struct PlatformDetails {
     // TODO: More appropriate type here, tuple or struct of usize?
     pub display_resolutions: Vec<String>,
     pub default_tickrate: usize,
-    pub quirks: QuirkSet,
+    pub quirks: HashMap<Quirk, bool>,
 }

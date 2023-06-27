@@ -208,13 +208,13 @@ mod test {
 
         let quirks = rom.quirky_platforms.unwrap()[&Platform::OriginalChip8].clone();
 
-        assert!(quirks.shift);
-        assert!(!quirks.memory_increment_by_x);
-        assert!(quirks.memory_leave_i_unchanged);
-        assert!(!quirks.wrap);
-        assert!(quirks.jump);
-        assert!(!quirks.vblank);
-        assert!(quirks.logic);
+        assert!(quirks[&Quirk::Shift]);
+        assert!(!quirks[&Quirk::MemoryIncrementByX]);
+        assert!(quirks[&Quirk::MemoryLeaveIUnchanged]);
+        assert!(!quirks[&Quirk::Wrap]);
+        assert!(quirks[&Quirk::Jump]);
+        assert!(!quirks[&Quirk::VBlank]);
+        assert!(quirks[&Quirk::Logic]);
 
         assert_eq!(vec!["Someone Else"], rom.authors.unwrap());
         assert_eq!(
@@ -307,13 +307,13 @@ mod test {
         assert_eq!(vec!["64x32"], platform.display_resolutions);
         assert_eq!(15, platform.default_tickrate);
 
-        assert!(!platform.quirks.shift);
-        assert!(!platform.quirks.memory_increment_by_x);
-        assert!(!platform.quirks.memory_leave_i_unchanged);
-        assert!(!platform.quirks.wrap);
-        assert!(!platform.quirks.jump);
-        assert!(platform.quirks.vblank);
-        assert!(platform.quirks.logic);
+        assert!(!platform.quirks[&Quirk::Shift]);
+        assert!(!platform.quirks[&Quirk::MemoryIncrementByX]);
+        assert!(!platform.quirks[&Quirk::MemoryLeaveIUnchanged]);
+        assert!(!platform.quirks[&Quirk::Wrap]);
+        assert!(!platform.quirks[&Quirk::Jump]);
+        assert!(platform.quirks[&Quirk::VBlank]);
+        assert!(platform.quirks[&Quirk::Logic]);
 
         Ok(())
     }
@@ -365,13 +365,13 @@ mod test {
         assert_eq!(vec!["128x64"], platform.display_resolutions);
         assert_eq!(999, platform.default_tickrate);
 
-        assert!(platform.quirks.shift);
-        assert!(!platform.quirks.memory_increment_by_x);
-        assert!(platform.quirks.memory_leave_i_unchanged);
-        assert!(!platform.quirks.wrap);
-        assert!(platform.quirks.jump);
-        assert!(!platform.quirks.vblank);
-        assert!(platform.quirks.logic);
+        assert!(platform.quirks[&Quirk::Shift]);
+        assert!(!platform.quirks[&Quirk::MemoryIncrementByX]);
+        assert!(platform.quirks[&Quirk::MemoryLeaveIUnchanged]);
+        assert!(!platform.quirks[&Quirk::Wrap]);
+        assert!(platform.quirks[&Quirk::Jump]);
+        assert!(!platform.quirks[&Quirk::VBlank]);
+        assert!(platform.quirks[&Quirk::Logic]);
 
         Ok(())
     }
