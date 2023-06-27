@@ -9,7 +9,7 @@ pub mod program;
 pub mod rom;
 pub mod rotation;
 
-use platform::{Platform, PlatformDetails};
+use platform::PlatformDetails;
 use program::Program;
 use sha1::{Digest, Sha1};
 use std::collections::HashMap;
