@@ -46,12 +46,12 @@ pub struct PlatformDetails {
     // TODO: More appropriate type here, tuple or struct of usize?
     pub display_resolutions: Vec<String>,
     pub default_tickrate: usize,
-    pub quirks: QuirkSet,
+    pub quirks: Quirk,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase", default)]
-pub struct QuirkSet {
+pub struct Quirk {
     pub shift: bool,
     pub memory_increment_by_x: bool,
     pub memory_leave_i_unchanged: bool,

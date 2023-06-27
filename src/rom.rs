@@ -6,7 +6,7 @@ use crate::{
     color::Colors,
     font::FontStyle,
     input::{Keymap, TouchInputMode},
-    platform::{Platform, QuirkSet},
+    platform::{Platform, Quirk},
     rotation::ScreenRotation,
 };
 
@@ -25,7 +25,7 @@ pub struct Rom {
 
     pub platforms: Vec<Platform>,
 
-    pub quirky_platforms: Option<HashMap<Platform, QuirkSet>>,
+    pub quirky_platforms: Option<HashMap<Platform, Quirk>>,
 
     pub authors: Option<Vec<String>>,
 
