@@ -31,6 +31,24 @@ pub enum Platform {
     XOChip,
 }
 
+#[non_exhaustive]
+#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PlatformDetails {
+    pub id: Platform,
+    pub name: String,
+    pub description: Option<String>,
+    pub release: Option<String>,
+    pub authors: Option<Vec<String>>,
+    pub urls: Option<Vec<String>>,
+    pub copyright: Option<String>,
+    pub license: Option<String>,
+    // TODO: More appropriate type here, tuple or struct of usize?
+    pub display_resolutions: Vec<String>,
+    pub default_tickrate: usize,
+    pub quirks: QuirkSet,
+}
+
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase", default)]
 pub struct QuirkSet {

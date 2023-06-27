@@ -9,6 +9,7 @@ pub mod program;
 pub mod rom;
 pub mod rotation;
 
+use platform::{Platform, PlatformDetails};
 use program::Program;
 use sha1::{Digest, Sha1};
 use std::collections::HashMap;
@@ -17,6 +18,7 @@ use std::collections::HashMap;
 pub struct Database {
     pub programs: Vec<Program>,
     pub hashes: HashMap<String, usize>,
+    pub platforms: Vec<PlatformDetails>,
 }
 
 impl Database {
@@ -29,7 +31,15 @@ impl Database {
         let hashes = serde_json::from_str(hashes)
             .expect("sha1-hashes.json is hardcoded and should never be in an invalid state");
 
-        Database { programs, hashes }
+        let platforms = include_str!("../chip-8-database/database/platforms.json");
+        let platforms = serde_json::from_str(platforms)
+            .expect("platforms.json is hardcoded and should never be in an invalid state");
+
+        Database {
+            programs,
+            hashes,
+            platforms,
+        }
     }
 
     pub fn get_metadata(&self, rom: &[u8]) -> Option<Program> {
@@ -259,6 +269,100 @@ mod test {
         let rom = program.roms["0123456789abcdef0123456789abcdef01234567"].clone();
 
         assert_eq!(vec![platform::Platform::OriginalChip8], rom.platforms);
+
+        Ok(())
+    }
+
+    #[test]
+    fn deserialize_platform_minimal() -> Result<()> {
+        let input = r##"{
+            "id": "originalChip8", 
+            "name": "Minimal Platform Example",
+            "displayResolutions": ["64x32"],
+            "defaultTickrate": 15,
+            "quirks": {
+                "shift": false,
+                "memoryIncrementByX": false,
+                "memoryLeaveIUnchanged": false,
+                "wrap": false,
+                "jump": false,
+                "vblank": true,
+                "logic": true
+            }
+        }"##;
+
+        let platform: PlatformDetails = serde_json::from_str(input)?;
+
+        assert_eq!(Platform::OriginalChip8, platform.id);
+        assert_eq!("Minimal Platform Example", platform.name);
+        assert_eq!(vec!["64x32"], platform.display_resolutions);
+        assert_eq!(15, platform.default_tickrate);
+
+        assert!(!platform.quirks.shift);
+        assert!(!platform.quirks.memory_increment_by_x);
+        assert!(!platform.quirks.memory_leave_i_unchanged);
+        assert!(!platform.quirks.wrap);
+        assert!(!platform.quirks.jump);
+        assert!(platform.quirks.vblank);
+        assert!(platform.quirks.logic);
+
+        Ok(())
+    }
+
+    #[test]
+    fn deserialize_platform() -> Result<()> {
+        let input = r##"{
+            "id": "hybridVIP", 
+            "name": "Platform Example",
+            "description": "A description goes here",
+            "release": "1999-12-31",
+            "authors": ["Who Knows?"],
+            "urls": ["https://example.com"],
+            "copyright": "Probably copyrighted or something",
+            "license": "GPL",
+            "displayResolutions": ["128x64"],
+            "defaultTickrate": 999,
+            "quirks": {
+                "shift": true,
+                "memoryIncrementByX": false,
+                "memoryLeaveIUnchanged": true,
+                "wrap": false,
+                "jump": true,
+                "vblank": false,
+                "logic": true
+            }
+        }"##;
+
+        let platform: PlatformDetails = serde_json::from_str(input)?;
+
+        assert_eq!(Platform::HybridVIP, platform.id);
+        assert_eq!("Platform Example", platform.name);
+
+        assert_eq!("A description goes here", &platform.description.unwrap());
+        assert_eq!("1999-12-31", &platform.release.unwrap());
+        assert_eq!(vec!["Who Knows?".to_owned()], platform.authors.unwrap());
+
+        assert_eq!(
+            vec!["https://example.com".to_owned()],
+            platform.urls.unwrap()
+        );
+
+        assert_eq!(
+            "Probably copyrighted or something",
+            &platform.copyright.unwrap()
+        );
+
+        assert_eq!("GPL", &platform.license.unwrap());
+        assert_eq!(vec!["128x64"], platform.display_resolutions);
+        assert_eq!(999, platform.default_tickrate);
+
+        assert!(platform.quirks.shift);
+        assert!(!platform.quirks.memory_increment_by_x);
+        assert!(platform.quirks.memory_leave_i_unchanged);
+        assert!(!platform.quirks.wrap);
+        assert!(platform.quirks.jump);
+        assert!(!platform.quirks.vblank);
+        assert!(platform.quirks.logic);
 
         Ok(())
     }
