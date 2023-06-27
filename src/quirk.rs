@@ -11,3 +11,27 @@ pub struct Quirk {
     pub vblank: bool,
     pub logic: bool,
 }
+
+#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub enum QuirkType {
+    Shift,
+    MemoryIncrementByX,
+    MemoryLeaveIUnchanged,
+    Wrap,
+    Jump,
+    #[serde(rename = "vblank")]
+    VBlank,
+    Logic,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct QuirkDetails {
+    pub id: QuirkType,
+    pub name: String,
+    pub description: Option<String>,
+    pub default: bool,
+    pub if_true: String,
+    pub if_false: String,
+}

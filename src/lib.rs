@@ -12,6 +12,7 @@ pub mod rotation;
 
 use platform::PlatformDetails;
 use program::Program;
+use quirk::QuirkDetails;
 use sha1::{Digest, Sha1};
 use std::collections::HashMap;
 
@@ -20,6 +21,7 @@ pub struct Database {
     pub programs: Vec<Program>,
     pub hashes: HashMap<String, usize>,
     pub platforms: Vec<PlatformDetails>,
+    pub quirks: Vec<QuirkDetails>,
 }
 
 impl Database {
@@ -36,10 +38,15 @@ impl Database {
         let platforms = serde_json::from_str(platforms)
             .expect("platforms.json is hardcoded and should never be in an invalid state");
 
+        let quirks = include_str!("../chip-8-database/database/quirks.json");
+        let quirks = serde_json::from_str(quirks)
+            .expect("quirks.json is hardcoded and should never be in an invalid state");
+
         Database {
             programs,
             hashes,
             platforms,
+            quirks,
         }
     }
 
@@ -82,6 +89,7 @@ mod test {
         input::{Keymap, TouchInputMode},
         origin::OriginType,
         platform::Platform,
+        quirk::QuirkType,
         rotation::ScreenRotation,
     };
     use serde_json::Result;
@@ -364,6 +372,54 @@ mod test {
         assert!(platform.quirks.jump);
         assert!(!platform.quirks.vblank);
         assert!(platform.quirks.logic);
+
+        Ok(())
+    }
+
+    #[test]
+    fn deserialize_quirks_minimal() -> Result<()> {
+        let input = r##"{
+            "id": "shift", 
+            "name": "Minimal Quirk Example",
+            "default": false,
+            "ifTrue": "Do some thing",
+            "ifFalse": "Do some other thing"
+        }"##;
+
+        let quirk: QuirkDetails = serde_json::from_str(input)?;
+
+        assert_eq!(QuirkType::Shift, quirk.id);
+        assert_eq!("Minimal Quirk Example", quirk.name);
+
+        assert!(!quirk.default);
+
+        assert_eq!("Do some thing", quirk.if_true);
+        assert_eq!("Do some other thing", quirk.if_false);
+
+        Ok(())
+    }
+
+    #[test]
+    fn deserialize_quirks() -> Result<()> {
+        let input = r##"{
+            "id": "jump", 
+            "name": "Quirk Example",
+            "description": "An example of a quirk",
+            "default": true,
+            "ifTrue": "Do some more things",
+            "ifFalse": "Do some more other things"
+        }"##;
+
+        let quirk: QuirkDetails = serde_json::from_str(input)?;
+
+        assert_eq!(QuirkType::Jump, quirk.id);
+        assert_eq!("Quirk Example", quirk.name);
+        assert_eq!("An example of a quirk", quirk.description.unwrap());
+
+        assert!(quirk.default);
+
+        assert_eq!("Do some more things", quirk.if_true);
+        assert_eq!("Do some more other things", quirk.if_false);
 
         Ok(())
     }
