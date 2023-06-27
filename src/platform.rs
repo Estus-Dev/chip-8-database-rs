@@ -12,7 +12,7 @@ pub enum Platform {
     #[serde(rename = "modernChip8")]
     ModernChip8,
 
-    #[serde(rename = "chip8X")]
+    #[serde(rename = "chip8x")]
     Chip8X,
 
     #[serde(rename = "chip48")]
