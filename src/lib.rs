@@ -254,7 +254,7 @@ mod test {
 
         let program: Program = serde_json::from_str(input)?;
 
-        assert_eq!(program.title, "Minimal");
+        assert_eq!("Minimal", program.title);
 
         let rom = program.roms["0123456789abcdef0123456789abcdef01234567"].clone();
 
