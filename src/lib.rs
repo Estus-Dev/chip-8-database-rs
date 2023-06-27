@@ -15,8 +15,8 @@ use std::collections::HashMap;
 
 #[derive(Clone, Debug, Default)]
 pub struct Database {
-    programs: Vec<Program>,
-    hashes: HashMap<String, usize>,
+    pub programs: Vec<Program>,
+    pub hashes: HashMap<String, usize>,
 }
 
 impl Database {
