@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::quirk::Quirk;
+use crate::quirk::QuirkSet;
 
 #[non_exhaustive]
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
@@ -48,5 +48,5 @@ pub struct PlatformDetails {
     // TODO: More appropriate type here, tuple or struct of usize?
     pub display_resolutions: Vec<String>,
     pub default_tickrate: usize,
-    pub quirks: Quirk,
+    pub quirks: QuirkSet,
 }

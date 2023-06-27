@@ -89,7 +89,7 @@ mod test {
         input::{Keymap, TouchInputMode},
         origin::OriginType,
         platform::Platform,
-        quirk::QuirkType,
+        quirk::Quirk,
         rotation::ScreenRotation,
     };
     use serde_json::Result;
@@ -388,7 +388,7 @@ mod test {
 
         let quirk: QuirkDetails = serde_json::from_str(input)?;
 
-        assert_eq!(QuirkType::Shift, quirk.id);
+        assert_eq!(Quirk::Shift, quirk.id);
         assert_eq!("Minimal Quirk Example", quirk.name);
 
         assert!(!quirk.default);
@@ -412,7 +412,7 @@ mod test {
 
         let quirk: QuirkDetails = serde_json::from_str(input)?;
 
-        assert_eq!(QuirkType::Jump, quirk.id);
+        assert_eq!(Quirk::Jump, quirk.id);
         assert_eq!("Quirk Example", quirk.name);
         assert_eq!("An example of a quirk", quirk.description.unwrap());
 
