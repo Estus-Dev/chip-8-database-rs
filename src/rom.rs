@@ -6,7 +6,8 @@ use crate::{
     color::Colors,
     font::FontStyle,
     input::{Keymap, TouchInputMode},
-    platform::{Platform, Quirk},
+    platform::Platform,
+    quirk::Quirk,
     rotation::ScreenRotation,
 };
 

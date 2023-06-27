@@ -6,6 +6,7 @@ pub mod input;
 pub mod origin;
 pub mod platform;
 pub mod program;
+pub mod quirk;
 pub mod rom;
 pub mod rotation;
 

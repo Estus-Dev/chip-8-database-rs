@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use crate::quirk::Quirk;
+
 #[non_exhaustive]
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub enum Platform {
@@ -47,16 +49,4 @@ pub struct PlatformDetails {
     pub display_resolutions: Vec<String>,
     pub default_tickrate: usize,
     pub quirks: Quirk,
-}
-
-#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
-#[serde(rename_all = "camelCase", default)]
-pub struct Quirk {
-    pub shift: bool,
-    pub memory_increment_by_x: bool,
-    pub memory_leave_i_unchanged: bool,
-    pub wrap: bool,
-    pub jump: bool,
-    pub vblank: bool,
-    pub logic: bool,
 }
