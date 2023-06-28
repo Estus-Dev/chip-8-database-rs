@@ -11,7 +11,11 @@ pub mod rom;
 pub mod rotation;
 
 use program::Program;
+
+#[cfg(feature = "hashes")]
 use sha1::{Digest, Sha1};
+
+#[cfg(feature = "hashes")]
 use std::collections::HashMap;
 
 #[cfg(feature = "platforms")]
@@ -23,6 +27,8 @@ use quirk::QuirkDetails;
 #[derive(Clone, Debug, Default)]
 pub struct Database {
     pub programs: Vec<Program>,
+
+    #[cfg(feature = "hashes")]
     pub hashes: HashMap<String, usize>,
 
     #[cfg(feature = "platforms")]
@@ -38,9 +44,13 @@ impl Database {
         let programs = serde_json::from_str(programs)
             .expect("programs.json is hardcoded and should never be in an invalid state");
 
-        let hashes = include_str!("../chip-8-database/database/sha1-hashes.json");
-        let hashes = serde_json::from_str(hashes)
-            .expect("sha1-hashes.json is hardcoded and should never be in an invalid state");
+        #[cfg(feature = "hashes")]
+        let hashes = {
+            let json = include_str!("../chip-8-database/database/sha1-hashes.json");
+
+            serde_json::from_str(json)
+                .expect("sha1-hashes.json is hardcoded and should never be in an invalid state")
+        };
 
         #[cfg(feature = "platforms")]
         let platforms = {
@@ -60,6 +70,8 @@ impl Database {
 
         Database {
             programs,
+
+            #[cfg(feature = "hashes")]
             hashes,
 
             #[cfg(feature = "platforms")]
@@ -70,6 +82,9 @@ impl Database {
         }
     }
 
+    #[cfg(feature = "hashes")]
+    /// Lookup the metadata for a specific ROM file by hashing it.
+    /// Requires `hashes` feature to be enabled.
     pub fn get_metadata(&self, rom: &[u8]) -> Option<Program> {
         let mut hasher = Sha1::new();
         hasher.update(rom);
@@ -80,6 +95,9 @@ impl Database {
         self.get_metadata_from_hash(hash)
     }
 
+    #[cfg(feature = "hashes")]
+    /// Lookup the metadata for a specific hash string.
+    /// Requires `hashes` feature to be enabled.
     pub fn get_metadata_from_hash(&self, hash: &str) -> Option<Program> {
         log::info!("Looking up ROM with hash {hash}");
 
