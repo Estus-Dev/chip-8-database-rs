@@ -27,14 +27,18 @@ use quirk::QuirkDetails;
 /// Database contains the full contents of the CHIP-8 database, minus any disabled features.
 #[derive(Clone, Debug, Default)]
 pub struct Database {
+    /// A list of all known programs written for a CHIP-8 platform.
     pub programs: Vec<Program>,
 
+    /// A map of all known ROM hashes, used to index into [programs].
     #[cfg(feature = "hashes")]
     pub hashes: HashMap<String, usize>,
 
+    /// A list of all known CHIP-8 variants.
     #[cfg(feature = "platforms")]
     pub platforms: Vec<PlatformDetails>,
 
+    /// A list of common quirks in CHIP-8 implementations.
     #[cfg(feature = "quirks")]
     pub quirks: Vec<QuirkDetails>,
 }
