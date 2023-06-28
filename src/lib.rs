@@ -24,6 +24,7 @@ use platform::PlatformDetails;
 #[cfg(feature = "quirks")]
 use quirk::QuirkDetails;
 
+/// Database contains the full contents of the CHIP-8 database, minus any disabled features.
 #[derive(Clone, Debug, Default)]
 pub struct Database {
     pub programs: Vec<Program>,
@@ -39,7 +40,11 @@ pub struct Database {
 }
 
 impl Database {
+    /// Create a new instance of the DB. Does not touch the filesystem or network.
     pub fn new() -> Self {
+        // Updating note: Panics if the `.json` files in `../chip-8-database/database/` are not in the
+        // expected schema. Update the tests with the new schema and try again.
+
         let programs = include_str!("../chip-8-database/database/programs.json");
         let programs = serde_json::from_str(programs)
             .expect("programs.json is hardcoded and should never be in an invalid state");
@@ -324,7 +329,7 @@ mod test {
     #[cfg(feature = "platforms")]
     fn deserialize_platform_minimal() -> Result<()> {
         let input = r##"{
-            "id": "originalChip8", 
+            "id": "originalChip8",
             "name": "Minimal Platform Example",
             "displayResolutions": ["64x32"],
             "defaultTickrate": 15,
@@ -361,7 +366,7 @@ mod test {
     #[cfg(feature = "platforms")]
     fn deserialize_platform() -> Result<()> {
         let input = r##"{
-            "id": "hybridVIP", 
+            "id": "hybridVIP",
             "name": "Platform Example",
             "description": "A description goes here",
             "release": "1999-12-31",
@@ -420,7 +425,7 @@ mod test {
     #[cfg(feature = "quirks")]
     fn deserialize_quirks_minimal() -> Result<()> {
         let input = r##"{
-            "id": "shift", 
+            "id": "shift",
             "name": "Minimal Quirk Example",
             "default": false,
             "ifTrue": "Do some thing",
@@ -444,7 +449,7 @@ mod test {
     #[cfg(feature = "quirks")]
     fn deserialize_quirks() -> Result<()> {
         let input = r##"{
-            "id": "jump", 
+            "id": "jump",
             "name": "Quirk Example",
             "description": "An example of a quirk",
             "default": true,
