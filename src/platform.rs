@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-/// An ID for this platform, by which to reference it in programs.json.
+/// An ID for this platform, by which to reference it in a [Program].
 #[non_exhaustive]
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub enum Platform {
@@ -37,7 +37,7 @@ pub enum Platform {
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct PlatformDetails {
-    /// An ID for this platform, by which to reference it in programs.json.
+    /// An ID for this platform, by which to reference it in a [Program].
     pub id: Platform,
 
     /// The full name of the platform, by which it is most commonly known.
