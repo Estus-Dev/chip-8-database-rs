@@ -9,6 +9,11 @@ You can also provide descriptions of the various CHIP-8 platforms out there, or 
 ## Usage
 
 ```rust
+# #[cfg(not(feature = "hashes"))]
+# fn main() {}
+#
+# #[cfg(feature = "hashes")]
+# fn main() {
 # use chip_8_database_rs::Database;
 #
 # let rom = [0u8; 4096];
@@ -28,6 +33,7 @@ println!("ROM Title: {}", metadata.title);
 if let Some(description) = metadata.description {
     println!("ROM Description: {description}");
 }
+# }
 ```
 
 ## Features
