@@ -16,7 +16,7 @@ use sha1::{Digest, Sha1};
 use std::collections::HashMap;
 
 #[cfg(feature = "platforms")]
-use crate::platform::PlatformDetails;
+use platform::PlatformDetails;
 
 #[derive(Clone, Debug, Default)]
 pub struct Database {
