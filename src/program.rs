@@ -13,6 +13,8 @@ pub struct Program {
     // TODO: This should be a date of some kind
     pub release: Option<String>,
 
+    /// The origin of this program; was it created at some event, for a game jam, or published in a
+    /// magazine somewhere?
     pub origin: Option<Origin>,
 
     pub copyright: Option<String>,
