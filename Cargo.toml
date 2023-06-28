@@ -3,6 +3,14 @@ name = "chip-8-database-rs"
 version = "0.1.0"
 edition = "2021"
 
+authors = ["Estus"]
+categories = ["config", "data-structures", "emulators"]
+description = "Embed the CHIP-8 DB in your own CHIP-8 implementation"
+keywords = ["CHIP-8", "metadata", "ROM", "hashes"]
+license-file = "LICENSE"
+readme = "README.md"
+repository = "https://github.com/Estus-Dev/chip-8-database-rs"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
