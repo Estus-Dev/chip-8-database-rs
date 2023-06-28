@@ -42,6 +42,8 @@ pub struct Rom {
 
     pub screen_rotation: Option<ScreenRotation>,
 
+    /// A mapping of common keys to hexadecimal key values for the CHIP-8 keypad. For systems with
+    /// dual keypads, add 0x10 (16) to the hexadecimal key value to indicate keypad number two.
     pub keys: Option<HashMap<Keymap, u8>>,
 
     pub touch_input_mode: Option<TouchInputMode>,

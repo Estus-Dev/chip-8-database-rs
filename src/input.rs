@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 
+/// A list of all named input keys in the DB schema.
 #[non_exhaustive]
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub enum Keymap {
@@ -40,6 +41,7 @@ pub enum Keymap {
     P2B,
 }
 
+/// The preferred touch input mode, values as used by Octo.
 #[non_exhaustive]
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 #[serde(rename_all = "lowercase")]
