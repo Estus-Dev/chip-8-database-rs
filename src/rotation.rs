@@ -1,3 +1,5 @@
+//! Defintions related to CHIP-8 screen rotations.
+
 use serde_repr::{Deserialize_repr, Serialize_repr};
 
 /// The screen orientation, in degrees rotated clockwise from the normal position.

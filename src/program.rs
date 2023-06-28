@@ -1,3 +1,5 @@
+//! Definitions related to CHIP-8 programs.
+
 use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};

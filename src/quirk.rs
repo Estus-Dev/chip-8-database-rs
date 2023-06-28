@@ -1,3 +1,5 @@
+//! Defintions related to CHIP-8 quirks.
+
 use serde::{Deserialize, Serialize};
 
 /// An ID for each quirk, by which to reference it in a [Program] or [Platform].

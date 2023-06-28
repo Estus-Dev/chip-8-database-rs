@@ -1,3 +1,5 @@
+//! Definitions related to user input.
+
 use serde::{Deserialize, Serialize};
 
 /// A list of all named input keys in the DB schema.

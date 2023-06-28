@@ -1,3 +1,5 @@
+//! Definitions related to colors.
+
 use serde::{Deserialize, Serialize};
 
 /// An object with hexadecimal color properties (#RRGGBB).

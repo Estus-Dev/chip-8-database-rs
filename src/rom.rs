@@ -1,3 +1,5 @@
+//! Defintions related to CHIP-8 ROMs.
+
 use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};

@@ -1,3 +1,5 @@
+//! Definitions related to [Program]/[ROM] origins.
+
 use serde::{Deserialize, Serialize};
 
 /// The origin of this program; was it created at some event, for a game jam, or published in a

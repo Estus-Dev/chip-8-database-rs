@@ -1,3 +1,5 @@
+//! Defintions related to the various CHIP-8 platforms.
+
 use serde::{Deserialize, Serialize};
 
 /// An ID for this platform, by which to reference it in a [Program].

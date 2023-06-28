@@ -1,3 +1,5 @@
+//! Definitions related to font data.
+
 use serde::{Deserialize, Serialize};
 
 /// The preferred style of font to use by the interpreter.
