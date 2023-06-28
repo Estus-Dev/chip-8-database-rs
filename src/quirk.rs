@@ -13,6 +13,7 @@ pub enum Quirk {
     Logic,
 }
 
+#[cfg(feature = "quirks")]
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct QuirkDetails {

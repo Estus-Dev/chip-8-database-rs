@@ -17,3 +17,6 @@ sha1 = "0.10.5"
 
 # Whether to embed the data from `platforms.json`
 platforms = []
+
+# Whether to embed the data from `quirks.json`
+quirks = []
