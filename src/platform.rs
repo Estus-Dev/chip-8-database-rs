@@ -1,8 +1,4 @@
-use std::collections::HashMap;
-
 use serde::{Deserialize, Serialize};
-
-use crate::quirk::Quirk;
 
 #[non_exhaustive]
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
@@ -35,6 +31,7 @@ pub enum Platform {
     XOChip,
 }
 
+#[cfg(feature = "platforms")]
 #[non_exhaustive]
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -50,5 +47,5 @@ pub struct PlatformDetails {
     // TODO: More appropriate type here, tuple or struct of usize?
     pub display_resolutions: Vec<String>,
     pub default_tickrate: usize,
-    pub quirks: HashMap<Quirk, bool>,
+    pub quirks: std::collections::HashMap<crate::quirk::Quirk, bool>,
 }

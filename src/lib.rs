@@ -10,17 +10,22 @@ pub mod quirk;
 pub mod rom;
 pub mod rotation;
 
-use platform::PlatformDetails;
 use program::Program;
 use quirk::QuirkDetails;
 use sha1::{Digest, Sha1};
 use std::collections::HashMap;
 
+#[cfg(feature = "platforms")]
+use crate::platform::PlatformDetails;
+
 #[derive(Clone, Debug, Default)]
 pub struct Database {
     pub programs: Vec<Program>,
     pub hashes: HashMap<String, usize>,
+
+    #[cfg(feature = "platforms")]
     pub platforms: Vec<PlatformDetails>,
+
     pub quirks: Vec<QuirkDetails>,
 }
 
@@ -34,9 +39,13 @@ impl Database {
         let hashes = serde_json::from_str(hashes)
             .expect("sha1-hashes.json is hardcoded and should never be in an invalid state");
 
-        let platforms = include_str!("../chip-8-database/database/platforms.json");
-        let platforms = serde_json::from_str(platforms)
-            .expect("platforms.json is hardcoded and should never be in an invalid state");
+        #[cfg(feature = "platforms")]
+        let platforms = {
+            let json = include_str!("../chip-8-database/database/platforms.json");
+
+            serde_json::from_str(json)
+                .expect("platforms.json is hardcoded and should never be in an invalid state")
+        };
 
         let quirks = include_str!("../chip-8-database/database/quirks.json");
         let quirks = serde_json::from_str(quirks)
@@ -45,7 +54,10 @@ impl Database {
         Database {
             programs,
             hashes,
+
+            #[cfg(feature = "platforms")]
             platforms,
+
             quirks,
         }
     }
@@ -283,6 +295,7 @@ mod test {
     }
 
     #[test]
+    #[cfg(feature = "platforms")]
     fn deserialize_platform_minimal() -> Result<()> {
         let input = r##"{
             "id": "originalChip8", 
@@ -319,6 +332,7 @@ mod test {
     }
 
     #[test]
+    #[cfg(feature = "platforms")]
     fn deserialize_platform() -> Result<()> {
         let input = r##"{
             "id": "hybridVIP", 
