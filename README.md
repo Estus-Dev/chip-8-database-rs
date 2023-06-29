@@ -6,6 +6,12 @@ Use this data to automatically apply the needed quirks for a specific ROM, or gi
 
 You can also provide descriptions of the various CHIP-8 platforms out there, or describe the effects of enabling various quirks.
 
+> Isn't this "cheating"? If I'm trying to learn how to build an emulator, why would I pull in this package?
+
+Don't worry. The only things in this crate that you should use in your emulator's core are the ROM lookup functions, to determine which quirks to apply. It's still up to you to build your emulator and implement those quirks.
+
+The goal of the rest of this crate is to help with the polish in your emulator's frontend. If you wouldn't shy away from using a crate like `winit` or `eframe` to create a window, you shouldn't worry about using this either.
+
 ## Usage
 
 ```rust
