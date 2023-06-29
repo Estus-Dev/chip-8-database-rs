@@ -115,7 +115,12 @@ impl Database {
             let rom = program
                 .roms
                 .get(hash)
-                .expect("If the hash matches above it should match here")
+                .unwrap_or_else(|| {
+                    panic!(
+                        "Are the chip-8-database tests passing? ({})",
+                        "✔ All hashes in sha1-hashes.json point to the right programs"
+                    )
+                })
                 .clone();
 
             program.roms = HashMap::new();
