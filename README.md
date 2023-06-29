@@ -38,24 +38,11 @@ if let Some(description) = metadata.description {
 
 ## Features
 
-While the ROM database is always enabled, you can choose to not include platforms and quirk data if you'd like to reduce your binary size. Just disable default features.
+While the ROM database is always enabled, there is additional data from `platforms.json` and `quirks.json` that you can choose to include with the `extra-data` feature.
 
 ```toml
-chip_8_database_rs = { version = "X", default-features = false }
+chip_8_database_rs = { version = "X", features = ["extra-data"] }
 ```
-
-### Platforms
-
-Whether to include the contents of `platforms.json`.
-
-This is information about the various CHIP-8 platforms out there. You'll still be able to see what platform a specific ROM was built for, but you won't be able to lookup detailed information about each platform.
-
-### Quirks
-
-Whether to include the contents of `quirks.json`.
-
-This is information about the quirks that may be encountered on various interpreters or emulators. Bugs, misunderstandings and/or technical limitations led to different platforms having different quirks. Many ROMs were built with a specific set of quirks in mind based on which platform they were written against.
-
 
 [CHIP-8]: https://chip-8.github.io/links/
 [CHIP-8 Database]: https://github.com/chip-8/chip-8-database

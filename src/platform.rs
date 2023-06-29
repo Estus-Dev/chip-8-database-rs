@@ -34,7 +34,7 @@ pub enum Platform {
     XOChip,
 }
 
-#[cfg(feature = "platforms")]
+#[cfg(feature = "extra-data")]
 #[non_exhaustive]
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]

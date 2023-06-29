@@ -17,7 +17,7 @@ pub enum Quirk {
 }
 
 /// A detailed breakdown of the meaning of a [Quirk].
-#[cfg(feature = "quirks")]
+#[cfg(feature = "extra-data")]
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct QuirkDetails {

@@ -14,10 +14,10 @@ use program::Program;
 use sha1::{Digest, Sha1};
 use std::collections::HashMap;
 
-#[cfg(feature = "platforms")]
+#[cfg(feature = "extra-data")]
 use platform::PlatformDetails;
 
-#[cfg(feature = "quirks")]
+#[cfg(feature = "extra-data")]
 use quirk::QuirkDetails;
 
 /// Database contains the full contents of the CHIP-8 database, minus any disabled features.
@@ -30,11 +30,11 @@ pub struct Database {
     pub hashes: HashMap<String, usize>,
 
     /// A list of all known CHIP-8 variants.
-    #[cfg(feature = "platforms")]
+    #[cfg(feature = "extra-data")]
     pub platforms: Vec<PlatformDetails>,
 
     /// A list of common quirks in CHIP-8 implementations.
-    #[cfg(feature = "quirks")]
+    #[cfg(feature = "extra-data")]
     pub quirks: Vec<QuirkDetails>,
 }
 
@@ -55,7 +55,7 @@ impl Database {
                 .expect("sha1-hashes.json is hardcoded and should never be in an invalid state")
         };
 
-        #[cfg(feature = "platforms")]
+        #[cfg(feature = "extra-data")]
         let platforms = {
             let json = include_str!("../chip-8-database/database/platforms.json");
 
@@ -63,7 +63,7 @@ impl Database {
                 .expect("platforms.json is hardcoded and should never be in an invalid state")
         };
 
-        #[cfg(feature = "quirks")]
+        #[cfg(feature = "extra-data")]
         let quirks = {
             let json = include_str!("../chip-8-database/database/quirks.json");
 
@@ -73,13 +73,12 @@ impl Database {
 
         Database {
             programs,
-
             hashes,
 
-            #[cfg(feature = "platforms")]
+            #[cfg(feature = "extra-data")]
             platforms,
 
-            #[cfg(feature = "quirks")]
+            #[cfg(feature = "extra-data")]
             quirks,
         }
     }
@@ -125,347 +124,366 @@ impl Database {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::{
-        font::FontStyle,
-        input::{Keymap, TouchInputMode},
-        origin::OriginType,
-        platform::Platform,
-        quirk::Quirk,
-        rotation::ScreenRotation,
-    };
-    use serde_json::Result;
 
-    #[test]
-    fn deserialize_program() -> Result<()> {
-        let input = r##"{
-            "title": "Test Program",
-            "origin": {
-                "type": "manual",
-                "reference": "What's this supposed to be?"
-            },
-            "description": "A description of the program",
-            "release": "2023-06-24",
-            "copyright": "Probably copyrighted or something",
-            "license": "MIT",
-            "authors": ["Someone"],
-            "images": ["https://example.com/chip8/test-program.png"],
-            "urls": ["https://example.com/chip8/test-program.html"],
-            "roms": {
-                "0123456789abcdef0123456789abcdef01234567": {
-                    "file": "test-program.ch8",
-                    "embeddedTitle": "Test Program Embedded",
-                    "description": "The test program to test all programs",
-                    "release": "2023-06-24",
-                    "platforms": ["originalChip8"],
-                    "quirkyPlatforms": {
-                        "originalChip8": {
-                            "shift": true,
-                            "memoryIncrementByX": false,
-                            "memoryLeaveIUnchanged": true,
-                            "wrap": false,
-                            "jump": true,
-                            "vblank": false,
-                            "logic": true
+    mod program {
+        use super::*;
+
+        use crate::{
+            font::FontStyle,
+            input::{Keymap, TouchInputMode},
+            origin::OriginType,
+            platform::Platform,
+            quirk::Quirk,
+            rotation::ScreenRotation,
+        };
+        use std::io::Result;
+
+        #[test]
+        fn deserialize_full() -> Result<()> {
+            let input = r##"{
+                "title": "Test Program",
+                "origin": {
+                    "type": "manual",
+                    "reference": "What's this supposed to be?"
+                },
+                "description": "A description of the program",
+                "release": "2023-06-24",
+                "copyright": "Probably copyrighted or something",
+                "license": "MIT",
+                "authors": ["Someone"],
+                "images": ["https://example.com/chip8/test-program.png"],
+                "urls": ["https://example.com/chip8/test-program.html"],
+                "roms": {
+                    "0123456789abcdef0123456789abcdef01234567": {
+                        "file": "test-program.ch8",
+                        "embeddedTitle": "Test Program Embedded",
+                        "description": "The test program to test all programs",
+                        "release": "2023-06-24",
+                        "platforms": ["originalChip8"],
+                        "quirkyPlatforms": {
+                            "originalChip8": {
+                                "shift": true,
+                                "memoryIncrementByX": false,
+                                "memoryLeaveIUnchanged": true,
+                                "wrap": false,
+                                "jump": true,
+                                "vblank": false,
+                                "logic": true
+                            }
+                        },
+                        "authors": ["Someone Else"],
+                        "images": ["https://example.com/chip8/test-program-detail.png"],
+                        "urls": ["https://example.com/chip8/test-program.ch8"],
+                        "tickrate": 10,
+                        "startAddress": 512,
+                        "screenRotation": 0,
+                        "keys": {
+                            "up": 0,
+                            "down": 1,
+                            "left": 2,
+                            "right": 3,
+                            "a": 4,
+                            "b": 5,
+                            "player2Up": 16,
+                            "player2Down": 17,
+                            "player2Left": 18,
+                            "player2Right": 19,
+                            "player2A": 20,
+                            "player2B": 21
+                        },
+                        "touchInputMode": "none",
+                        "fontStyle": "vip",
+                        "colors": {
+                            "pixels": ["#000000", "#ff0000", "#00ff00", "#0000ff"],
+                            "buzzer": "#cccccc",
+                            "silence": "#555555"
                         }
-                    },
-                    "authors": ["Someone Else"],
-                    "images": ["https://example.com/chip8/test-program-detail.png"],
-                    "urls": ["https://example.com/chip8/test-program.ch8"],
-                    "tickrate": 10,
-                    "startAddress": 512,
-                    "screenRotation": 0,
-                    "keys": {
-                        "up": 0,
-                        "down": 1,
-                        "left": 2,
-                        "right": 3,
-                        "a": 4,
-                        "b": 5,
-                        "player2Up": 16,
-                        "player2Down": 17,
-                        "player2Left": 18,
-                        "player2Right": 19,
-                        "player2A": 20,
-                        "player2B": 21
-                    },
-                    "touchInputMode": "none",
-                    "fontStyle": "vip",
-                    "colors": {
-                        "pixels": ["#000000", "#ff0000", "#00ff00", "#0000ff"],
-                        "buzzer": "#cccccc",
-                        "silence": "#555555"
                     }
                 }
-            }
-        }"##;
+            }"##;
 
-        let program: Program = serde_json::from_str(input)?;
+            let program: Program = serde_json::from_str(input)?;
 
-        assert_eq!(program.title, "Test Program");
-        assert_eq!(
-            &OriginType::Manual,
-            program
-                .origin
-                .as_ref()
-                .unwrap()
-                .origin_type
-                .as_ref()
-                .unwrap()
-        );
-        assert_eq!(
-            "What's this supposed to be?",
-            program.origin.unwrap().reference.unwrap()
-        );
-        assert_eq!(
-            "A description of the program",
-            &program.description.unwrap()
-        );
-        assert_eq!("2023-06-24", &program.release.unwrap());
-        assert_eq!(
-            "Probably copyrighted or something",
-            &program.copyright.unwrap()
-        );
-        assert_eq!("MIT", &program.license.unwrap());
-        assert_eq!(vec!["Someone".to_owned()], program.authors.unwrap());
-        assert_eq!(
-            vec!["https://example.com/chip8/test-program.png"],
-            program.images.unwrap()
-        );
-        assert_eq!(
-            vec!["https://example.com/chip8/test-program.html"],
-            program.urls.unwrap()
-        );
+            assert_eq!(program.title, "Test Program");
+            assert_eq!(
+                &OriginType::Manual,
+                program
+                    .origin
+                    .as_ref()
+                    .unwrap()
+                    .origin_type
+                    .as_ref()
+                    .unwrap()
+            );
+            assert_eq!(
+                "What's this supposed to be?",
+                program.origin.unwrap().reference.unwrap()
+            );
+            assert_eq!(
+                "A description of the program",
+                &program.description.unwrap()
+            );
+            assert_eq!("2023-06-24", &program.release.unwrap());
+            assert_eq!(
+                "Probably copyrighted or something",
+                &program.copyright.unwrap()
+            );
+            assert_eq!("MIT", &program.license.unwrap());
+            assert_eq!(vec!["Someone".to_owned()], program.authors.unwrap());
+            assert_eq!(
+                vec!["https://example.com/chip8/test-program.png"],
+                program.images.unwrap()
+            );
+            assert_eq!(
+                vec!["https://example.com/chip8/test-program.html"],
+                program.urls.unwrap()
+            );
 
-        let rom = program.roms["0123456789abcdef0123456789abcdef01234567"].clone();
+            let rom = program.roms["0123456789abcdef0123456789abcdef01234567"].clone();
 
-        assert_eq!("test-program.ch8", &rom.file_name.unwrap());
-        assert_eq!("Test Program Embedded", &rom.embedded_title.unwrap());
-        assert_eq!(
-            "The test program to test all programs",
-            rom.description.unwrap()
-        );
-        assert_eq!("2023-06-24", rom.release.unwrap());
-        assert_eq!(vec![Platform::OriginalChip8], rom.platforms);
+            assert_eq!("test-program.ch8", &rom.file_name.unwrap());
+            assert_eq!("Test Program Embedded", &rom.embedded_title.unwrap());
+            assert_eq!(
+                "The test program to test all programs",
+                rom.description.unwrap()
+            );
+            assert_eq!("2023-06-24", rom.release.unwrap());
+            assert_eq!(vec![Platform::OriginalChip8], rom.platforms);
 
-        let quirks = rom.quirky_platforms.unwrap()[&Platform::OriginalChip8].clone();
+            let quirks = rom.quirky_platforms.unwrap()[&Platform::OriginalChip8].clone();
 
-        assert!(quirks[&Quirk::Shift]);
-        assert!(!quirks[&Quirk::MemoryIncrementByX]);
-        assert!(quirks[&Quirk::MemoryLeaveIUnchanged]);
-        assert!(!quirks[&Quirk::Wrap]);
-        assert!(quirks[&Quirk::Jump]);
-        assert!(!quirks[&Quirk::VBlank]);
-        assert!(quirks[&Quirk::Logic]);
+            assert!(quirks[&Quirk::Shift]);
+            assert!(!quirks[&Quirk::MemoryIncrementByX]);
+            assert!(quirks[&Quirk::MemoryLeaveIUnchanged]);
+            assert!(!quirks[&Quirk::Wrap]);
+            assert!(quirks[&Quirk::Jump]);
+            assert!(!quirks[&Quirk::VBlank]);
+            assert!(quirks[&Quirk::Logic]);
 
-        assert_eq!(vec!["Someone Else"], rom.authors.unwrap());
-        assert_eq!(
-            vec!["https://example.com/chip8/test-program-detail.png"],
-            rom.images.unwrap()
-        );
-        assert_eq!(
-            vec!["https://example.com/chip8/test-program.ch8"],
-            rom.urls.unwrap()
-        );
-        assert_eq!(10, rom.tickrate.unwrap());
-        assert_eq!(0x200, rom.start_address.unwrap());
-        assert_eq!(ScreenRotation::Landscape, rom.screen_rotation.unwrap());
+            assert_eq!(vec!["Someone Else"], rom.authors.unwrap());
+            assert_eq!(
+                vec!["https://example.com/chip8/test-program-detail.png"],
+                rom.images.unwrap()
+            );
+            assert_eq!(
+                vec!["https://example.com/chip8/test-program.ch8"],
+                rom.urls.unwrap()
+            );
+            assert_eq!(10, rom.tickrate.unwrap());
+            assert_eq!(0x200, rom.start_address.unwrap());
+            assert_eq!(ScreenRotation::Landscape, rom.screen_rotation.unwrap());
 
-        let keys = rom.keys.unwrap();
+            let keys = rom.keys.unwrap();
 
-        assert_eq!(0x00, keys[&Keymap::P1Up]);
-        assert_eq!(0x01, keys[&Keymap::P1Down]);
-        assert_eq!(0x02, keys[&Keymap::P1Left]);
-        assert_eq!(0x03, keys[&Keymap::P1Right]);
-        assert_eq!(0x04, keys[&Keymap::P1A]);
-        assert_eq!(0x05, keys[&Keymap::P1B]);
+            assert_eq!(0x00, keys[&Keymap::P1Up]);
+            assert_eq!(0x01, keys[&Keymap::P1Down]);
+            assert_eq!(0x02, keys[&Keymap::P1Left]);
+            assert_eq!(0x03, keys[&Keymap::P1Right]);
+            assert_eq!(0x04, keys[&Keymap::P1A]);
+            assert_eq!(0x05, keys[&Keymap::P1B]);
 
-        assert_eq!(0x10, keys[&Keymap::P2Up]);
-        assert_eq!(0x11, keys[&Keymap::P2Down]);
-        assert_eq!(0x12, keys[&Keymap::P2Left]);
-        assert_eq!(0x13, keys[&Keymap::P2Right]);
-        assert_eq!(0x14, keys[&Keymap::P2A]);
-        assert_eq!(0x15, keys[&Keymap::P2B]);
+            assert_eq!(0x10, keys[&Keymap::P2Up]);
+            assert_eq!(0x11, keys[&Keymap::P2Down]);
+            assert_eq!(0x12, keys[&Keymap::P2Left]);
+            assert_eq!(0x13, keys[&Keymap::P2Right]);
+            assert_eq!(0x14, keys[&Keymap::P2A]);
+            assert_eq!(0x15, keys[&Keymap::P2B]);
 
-        assert_eq!(TouchInputMode::None, rom.touch_input_mode.unwrap());
-        assert_eq!(FontStyle::VIP, rom.font_style.unwrap());
+            assert_eq!(TouchInputMode::None, rom.touch_input_mode.unwrap());
+            assert_eq!(FontStyle::VIP, rom.font_style.unwrap());
 
-        let colors = rom.colors.unwrap();
+            let colors = rom.colors.unwrap();
 
-        assert_eq!(
-            vec!["#000000", "#ff0000", "#00ff00", "#0000ff"],
-            colors.pixels.unwrap()
-        );
-        assert_eq!("#cccccc", colors.buzzer.unwrap());
-        assert_eq!("#555555", colors.silence.unwrap());
+            assert_eq!(
+                vec!["#000000", "#ff0000", "#00ff00", "#0000ff"],
+                colors.pixels.unwrap()
+            );
+            assert_eq!("#cccccc", colors.buzzer.unwrap());
+            assert_eq!("#555555", colors.silence.unwrap());
 
-        Ok(())
-    }
+            Ok(())
+        }
 
-    #[test]
-    fn deserialize_program_minimal() -> Result<()> {
-        let input = r##"{
-            "title": "Minimal",
-            "roms": {
-                "0123456789abcdef0123456789abcdef01234567": {
-                    "platforms": ["originalChip8"]
+        #[test]
+        fn deserialize_minimal() -> Result<()> {
+            let input = r##"{
+                "title": "Minimal",
+                "roms": {
+                    "0123456789abcdef0123456789abcdef01234567": {
+                        "platforms": ["originalChip8"]
+                    }
                 }
-            }
-        }"##;
+            }"##;
 
-        let program: Program = serde_json::from_str(input)?;
+            let program: Program = serde_json::from_str(input)?;
 
-        assert_eq!("Minimal", program.title);
+            assert_eq!("Minimal", program.title);
 
-        let rom = program.roms["0123456789abcdef0123456789abcdef01234567"].clone();
+            let rom = program.roms["0123456789abcdef0123456789abcdef01234567"].clone();
 
-        assert_eq!(vec![platform::Platform::OriginalChip8], rom.platforms);
+            assert_eq!(vec![Platform::OriginalChip8], rom.platforms);
 
-        Ok(())
+            Ok(())
+        }
     }
 
-    #[test]
-    #[cfg(feature = "platforms")]
-    fn deserialize_platform_minimal() -> Result<()> {
-        let input = r##"{
-            "id": "originalChip8",
-            "name": "Minimal Platform Example",
-            "displayResolutions": ["64x32"],
-            "defaultTickrate": 15,
-            "quirks": {
-                "shift": false,
-                "memoryIncrementByX": false,
-                "memoryLeaveIUnchanged": false,
-                "wrap": false,
-                "jump": false,
-                "vblank": true,
-                "logic": true
-            }
-        }"##;
+    #[cfg(feature = "extra-data")]
+    mod platform {
+        use crate::{platform::Platform, quirk::Quirk};
 
-        let platform: PlatformDetails = serde_json::from_str(input)?;
+        use super::*;
 
-        assert_eq!(Platform::OriginalChip8, platform.id);
-        assert_eq!("Minimal Platform Example", platform.name);
-        assert_eq!(vec!["64x32"], platform.display_resolutions);
-        assert_eq!(15, platform.default_tickrate);
+        use std::io::Result;
 
-        assert!(!platform.quirks[&Quirk::Shift]);
-        assert!(!platform.quirks[&Quirk::MemoryIncrementByX]);
-        assert!(!platform.quirks[&Quirk::MemoryLeaveIUnchanged]);
-        assert!(!platform.quirks[&Quirk::Wrap]);
-        assert!(!platform.quirks[&Quirk::Jump]);
-        assert!(platform.quirks[&Quirk::VBlank]);
-        assert!(platform.quirks[&Quirk::Logic]);
+        #[test]
+        fn deserialize_minimal() -> Result<()> {
+            let input = r##"{
+                "id": "originalChip8",
+                "name": "Minimal Platform Example",
+                "displayResolutions": ["64x32"],
+                "defaultTickrate": 15,
+                "quirks": {
+                    "shift": false,
+                    "memoryIncrementByX": false,
+                    "memoryLeaveIUnchanged": false,
+                    "wrap": false,
+                    "jump": false,
+                    "vblank": true,
+                    "logic": true
+                }
+            }"##;
 
-        Ok(())
+            let platform: PlatformDetails = serde_json::from_str(input)?;
+
+            assert_eq!(Platform::OriginalChip8, platform.id);
+            assert_eq!("Minimal Platform Example", platform.name);
+            assert_eq!(vec!["64x32"], platform.display_resolutions);
+            assert_eq!(15, platform.default_tickrate);
+
+            assert!(!platform.quirks[&Quirk::Shift]);
+            assert!(!platform.quirks[&Quirk::MemoryIncrementByX]);
+            assert!(!platform.quirks[&Quirk::MemoryLeaveIUnchanged]);
+            assert!(!platform.quirks[&Quirk::Wrap]);
+            assert!(!platform.quirks[&Quirk::Jump]);
+            assert!(platform.quirks[&Quirk::VBlank]);
+            assert!(platform.quirks[&Quirk::Logic]);
+
+            Ok(())
+        }
+
+        #[test]
+        fn deserialize_full() -> Result<()> {
+            let input = r##"{
+                "id": "hybridVIP",
+                "name": "Platform Example",
+                "description": "A description goes here",
+                "release": "1999-12-31",
+                "authors": ["Who Knows?"],
+                "urls": ["https://example.com"],
+                "copyright": "Probably copyrighted or something",
+                "license": "GPL",
+                "displayResolutions": ["128x64"],
+                "defaultTickrate": 999,
+                "quirks": {
+                    "shift": true,
+                    "memoryIncrementByX": false,
+                    "memoryLeaveIUnchanged": true,
+                    "wrap": false,
+                    "jump": true,
+                    "vblank": false,
+                    "logic": true
+                }
+            }"##;
+
+            let platform: PlatformDetails = serde_json::from_str(input)?;
+
+            assert_eq!(Platform::HybridVIP, platform.id);
+            assert_eq!("Platform Example", platform.name);
+
+            assert_eq!("A description goes here", &platform.description.unwrap());
+            assert_eq!("1999-12-31", &platform.release.unwrap());
+            assert_eq!(vec!["Who Knows?".to_owned()], platform.authors.unwrap());
+
+            assert_eq!(
+                vec!["https://example.com".to_owned()],
+                platform.urls.unwrap()
+            );
+
+            assert_eq!(
+                "Probably copyrighted or something",
+                &platform.copyright.unwrap()
+            );
+
+            assert_eq!("GPL", &platform.license.unwrap());
+            assert_eq!(vec!["128x64"], platform.display_resolutions);
+            assert_eq!(999, platform.default_tickrate);
+
+            assert!(platform.quirks[&Quirk::Shift]);
+            assert!(!platform.quirks[&Quirk::MemoryIncrementByX]);
+            assert!(platform.quirks[&Quirk::MemoryLeaveIUnchanged]);
+            assert!(!platform.quirks[&Quirk::Wrap]);
+            assert!(platform.quirks[&Quirk::Jump]);
+            assert!(!platform.quirks[&Quirk::VBlank]);
+            assert!(platform.quirks[&Quirk::Logic]);
+
+            Ok(())
+        }
     }
 
-    #[test]
-    #[cfg(feature = "platforms")]
-    fn deserialize_platform() -> Result<()> {
-        let input = r##"{
-            "id": "hybridVIP",
-            "name": "Platform Example",
-            "description": "A description goes here",
-            "release": "1999-12-31",
-            "authors": ["Who Knows?"],
-            "urls": ["https://example.com"],
-            "copyright": "Probably copyrighted or something",
-            "license": "GPL",
-            "displayResolutions": ["128x64"],
-            "defaultTickrate": 999,
-            "quirks": {
-                "shift": true,
-                "memoryIncrementByX": false,
-                "memoryLeaveIUnchanged": true,
-                "wrap": false,
-                "jump": true,
-                "vblank": false,
-                "logic": true
-            }
-        }"##;
+    #[cfg(feature = "extra-data")]
+    mod quirks {
+        use crate::quirk::Quirk;
 
-        let platform: PlatformDetails = serde_json::from_str(input)?;
+        use super::*;
 
-        assert_eq!(Platform::HybridVIP, platform.id);
-        assert_eq!("Platform Example", platform.name);
+        use std::io::Result;
 
-        assert_eq!("A description goes here", &platform.description.unwrap());
-        assert_eq!("1999-12-31", &platform.release.unwrap());
-        assert_eq!(vec!["Who Knows?".to_owned()], platform.authors.unwrap());
+        #[test]
+        fn deserialize_minimal() -> Result<()> {
+            let input = r##"{
+                "id": "shift",
+                "name": "Minimal Quirk Example",
+                "default": false,
+                "ifTrue": "Do some thing",
+                "ifFalse": "Do some other thing"
+            }"##;
 
-        assert_eq!(
-            vec!["https://example.com".to_owned()],
-            platform.urls.unwrap()
-        );
+            let quirk: QuirkDetails = serde_json::from_str(input)?;
 
-        assert_eq!(
-            "Probably copyrighted or something",
-            &platform.copyright.unwrap()
-        );
+            assert_eq!(Quirk::Shift, quirk.id);
+            assert_eq!("Minimal Quirk Example", quirk.name);
 
-        assert_eq!("GPL", &platform.license.unwrap());
-        assert_eq!(vec!["128x64"], platform.display_resolutions);
-        assert_eq!(999, platform.default_tickrate);
+            assert!(!quirk.default);
 
-        assert!(platform.quirks[&Quirk::Shift]);
-        assert!(!platform.quirks[&Quirk::MemoryIncrementByX]);
-        assert!(platform.quirks[&Quirk::MemoryLeaveIUnchanged]);
-        assert!(!platform.quirks[&Quirk::Wrap]);
-        assert!(platform.quirks[&Quirk::Jump]);
-        assert!(!platform.quirks[&Quirk::VBlank]);
-        assert!(platform.quirks[&Quirk::Logic]);
+            assert_eq!("Do some thing", quirk.if_true);
+            assert_eq!("Do some other thing", quirk.if_false);
 
-        Ok(())
-    }
+            Ok(())
+        }
 
-    #[test]
-    #[cfg(feature = "quirks")]
-    fn deserialize_quirks_minimal() -> Result<()> {
-        let input = r##"{
-            "id": "shift",
-            "name": "Minimal Quirk Example",
-            "default": false,
-            "ifTrue": "Do some thing",
-            "ifFalse": "Do some other thing"
-        }"##;
+        #[test]
+        fn deserialize_full() -> Result<()> {
+            let input = r##"{
+                "id": "jump",
+                "name": "Quirk Example",
+                "description": "An example of a quirk",
+                "default": true,
+                "ifTrue": "Do some more things",
+                "ifFalse": "Do some more other things"
+            }"##;
 
-        let quirk: QuirkDetails = serde_json::from_str(input)?;
+            let quirk: QuirkDetails = serde_json::from_str(input)?;
 
-        assert_eq!(Quirk::Shift, quirk.id);
-        assert_eq!("Minimal Quirk Example", quirk.name);
+            assert_eq!(Quirk::Jump, quirk.id);
+            assert_eq!("Quirk Example", quirk.name);
+            assert_eq!("An example of a quirk", quirk.description.unwrap());
 
-        assert!(!quirk.default);
+            assert!(quirk.default);
 
-        assert_eq!("Do some thing", quirk.if_true);
-        assert_eq!("Do some other thing", quirk.if_false);
+            assert_eq!("Do some more things", quirk.if_true);
+            assert_eq!("Do some more other things", quirk.if_false);
 
-        Ok(())
-    }
-
-    #[test]
-    #[cfg(feature = "quirks")]
-    fn deserialize_quirks() -> Result<()> {
-        let input = r##"{
-            "id": "jump",
-            "name": "Quirk Example",
-            "description": "An example of a quirk",
-            "default": true,
-            "ifTrue": "Do some more things",
-            "ifFalse": "Do some more other things"
-        }"##;
-
-        let quirk: QuirkDetails = serde_json::from_str(input)?;
-
-        assert_eq!(Quirk::Jump, quirk.id);
-        assert_eq!("Quirk Example", quirk.name);
-        assert_eq!("An example of a quirk", quirk.description.unwrap());
-
-        assert!(quirk.default);
-
-        assert_eq!("Do some more things", quirk.if_true);
-        assert_eq!("Do some more other things", quirk.if_false);
-
-        Ok(())
+            Ok(())
+        }
     }
 }
