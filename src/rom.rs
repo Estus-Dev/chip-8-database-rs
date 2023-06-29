@@ -13,6 +13,7 @@ use crate::{
     rotation::ScreenRotation,
 };
 
+/// A specific ROM version of a program.
 #[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Rom {
