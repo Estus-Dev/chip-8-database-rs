@@ -15,11 +15,6 @@ The goal of the rest of this crate is to help with the polish in your emulator's
 ## Usage
 
 ```rust
-# #[cfg(not(feature = "hashes"))]
-# fn main() {}
-#
-# #[cfg(feature = "hashes")]
-# fn main() {
 # use chip_8_database_rs::Database;
 #
 # let rom = [0u8; 4096];
@@ -39,22 +34,15 @@ println!("ROM Title: {}", metadata.title);
 if let Some(description) = metadata.description {
     println!("ROM Description: {description}");
 }
-# }
 ```
 
 ## Features
 
-While the ROM database is always enabled, you can choose to not include platforms, hashes, or quirk data if you'd like to reduce your binary size. Just disable default features and pick and choose the ones you'd like.
+While the ROM database is always enabled, you can choose to not include platforms and quirk data if you'd like to reduce your binary size. Just disable default features.
 
 ```toml
-chip_8_database_rs = { version = "X", default-features = false, features = ["hashes"]}
+chip_8_database_rs = { version = "X", default-features = false }
 ```
-
-### Hashes
-
-Whether to include the contents of `sha1-hashes.json`.
-
-Note that without this feature, you will be unable to automatically lookup ROM data.
 
 ### Platforms
 
