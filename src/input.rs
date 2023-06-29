@@ -48,11 +48,22 @@ pub enum Keymap {
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum TouchInputMode {
+    /// No defined touch input mode exists for this ROM.
     #[default]
     None,
+
+    /// Touch devices should allow players to swipe to control this ROM.
     Swipe,
+
+    /// Touch devices should treat the entire screen as an invisible 4x4 grid of buttons.
     Seg16,
+
+    /// Touch devices should treat the entire screen as a 4x4 grid of buttons.
     Seg16Fill,
+
+    /// Touch devices should display a virtual D-Pad with A and B buttons.
     Gamepad,
+
+    /// Touch devices should display a visible 4x4 grid of buttons separate from the game screen.
     VIP,
 }
