@@ -2,7 +2,7 @@
 
 Easily access the data from the [CHIP-8 Database][] from your own [CHIP-8] implementation written in Rust.
 
-Use this data to automatically apply the needed quirks for a specific ROM, or give the user more information about individual games. You can show the name of the game in the titlebar, or display example images while emulation is stopped.
+Use this data to automatically apply the needed quirks for a specific ROM, or give the user more information about individual games. You can show the name of the game in the titlebar, or display example images in menus or while emulation is stopped.
 
 You can also provide descriptions of the various CHIP-8 platforms out there, or describe the effects of enabling various quirks.
 
