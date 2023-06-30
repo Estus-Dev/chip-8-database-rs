@@ -29,9 +29,12 @@ pub struct Rom {
     /// program description, it can be added in this field.
     pub description: Option<String>,
 
-    // TODO: This should be a date of some kind
-    /// The date at which this particular ROM was first released, if it differs from the program's
-    /// release date. Can be a year, a year and a month or a year, month and day.
+    /// The date at which this particular ROM was first released in ISO 8601 date format. Can be a
+    /// year, a year and a month or a year, month and day.
+    ///
+    /// N.B. When even the specific year is not known, one or more digits at the end may be replaced
+    /// with `x`, as in `199x` or `19xx`. If sorting is required, sorting as strings should do the
+    /// job.
     pub release: Option<String>,
 
     /// An ordered list of the platforms that this ROM can successfully run on with that platform's

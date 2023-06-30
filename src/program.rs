@@ -17,9 +17,12 @@ pub struct Program {
     /// published it.
     pub description: Option<String>,
 
-    // TODO: This should be a date of some kind
     /// The date at which the program was first released in ISO 8601 date format. Can be a year, a
     /// year and a month or a year, month and day.
+    ///
+    /// N.B. When even the specific year is not known, one or more digits at the end may be replaced
+    /// with `x`, as in `199x` or `19xx`. If sorting is required, sorting as strings should do the
+    /// job.
     pub release: Option<String>,
 
     /// The origin of this program; was it created at some event, for a game jam, or published in a
