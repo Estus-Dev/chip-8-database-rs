@@ -39,7 +39,6 @@ pub struct Program {
     /// The list of authors who worked on developing this program.
     pub authors: Option<Vec<String>>,
 
-    // TODO: Support real images here
     /// A list of file names of images that display this program.
     pub images: Option<Vec<String>>,
 
