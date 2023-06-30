@@ -30,10 +30,9 @@ pub struct Program {
     /// known, please use the `license` field instead.
     pub copyright: Option<String>,
 
-    // TODO: See https://crates.io/crates/spdx
     /// The license(s) applicable to this program. Must be an SPDX license expression
-    /// (see https://spdx.github.io/spdx-spec/v2.3/SPDX-license-expressions/ and
-    /// https://spdx.org/licenses/).
+    /// (see https://crates.io/crates/spdx, https://spdx.org/licenses/, and
+    /// https://spdx.github.io/spdx-spec/v2.3/SPDX-license-expressions/).
     pub license: Option<String>,
 
     /// The list of authors who worked on developing this program.
