@@ -44,7 +44,6 @@ pub struct Program {
     /// A list of file names of images that display this program.
     pub images: Option<Vec<String>>,
 
-    // TODO: Use an appropriate URL type here
     /// A list of URLs that are relevant for this program, like a source code repository or
     /// additional materials.
     pub urls: Option<Vec<String>>,
