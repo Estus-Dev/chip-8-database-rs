@@ -50,7 +50,6 @@ pub struct Rom {
     /// The list of authors who worked on developing this ROM.
     pub authors: Option<Vec<String>>,
 
-    // TODO: Support real images here
     /// A list of file names of images that display this ROM.
     pub images: Option<Vec<String>>,
 
