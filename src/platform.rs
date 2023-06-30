@@ -68,8 +68,7 @@ pub struct PlatformDetails {
     /// https://spdx.org/licenses/).
     pub license: Option<String>,
 
-    // TODO: More appropriate type here, tuple or struct of usize?
-    /// All the display resolutions that this platform supports.
+    /// All the display resolutions that this platform supports in the form "WIDTHxHEIGHT".
     pub display_resolutions: Vec<String>,
 
     /// The preferred number of cycles per frame to run the interpreter at. It's the default because
