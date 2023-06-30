@@ -49,7 +49,6 @@ pub struct Program {
     /// additional materials.
     pub urls: Option<Vec<String>>,
 
-    // TODO: Use an appropriate type for hashes
     /// A map of SHA1 hashes to ROM files that relate to this program.
     pub roms: HashMap<String, Rom>,
 }
