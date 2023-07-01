@@ -87,10 +87,12 @@ impl Database {
     pub fn new() -> Self {
         // Updating note: Panics if the `.json` files in `../chip-8-database/database/` are not in the
         // expected schema. Update the tests with the new schema and try again.
+        let programs = {
+            let json = include_str!("../chip-8-database/database/programs.json");
 
-        let programs = include_str!("../chip-8-database/database/programs.json");
-        let programs = serde_json::from_str(programs)
-            .expect("programs.json is hardcoded and should never be in an invalid state");
+            serde_json::from_str(json)
+                .expect("programs.json is hardcoded and should never be in an invalid state")
+        };
 
         let hashes = {
             let json = include_str!("../chip-8-database/database/sha1-hashes.json");
