@@ -11,7 +11,7 @@
 //! ## Usage
 //!
 //! ```rust
-//! # use chip_8_database_rs::Database;
+//! # use chip8_db::Database;
 //! #
 //! # let rom = [0u8; 4096];
 //! #
