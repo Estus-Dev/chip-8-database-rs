@@ -1,5 +1,10 @@
 # CHIP-8 Database RS
 
+[![Github Badge][]][Github]
+![License Badge][]
+[![Crates.io Badge][]][Crates.io]
+[![Docs.rs Badge][]][Docs.rs]
+
 Easily access the data from the [CHIP-8 Database][] from your own [CHIP-8] implementation written in Rust.
 
 Use this data to automatically apply the needed quirks for a specific ROM, or give the user more information about individual games. You can show the name of the game in the titlebar, or display a description of the ROM underneath the main window.
@@ -42,3 +47,10 @@ chip_8_database_rs = { version = "X", features = ["extra-data"] }
 
 [CHIP-8]: https://chip-8.github.io/links/
 [CHIP-8 Database]: https://github.com/chip-8/chip-8-database
+[Crates.io]: https://crates.io/crates/chip8_db
+[Crates.io Badge]: https://img.shields.io/crates/d/chip8_db
+[Docs.rs]: https://docs.rs/crate/chip8_db
+[Docs.rs Badge]: https://img.shields.io/docsrs/chip8_db/latest?logo=docsdotrs
+[License Badge]: https://img.shields.io/github/license/Estus-Dev/chip-8-database-rs
+[Github]: https://github.com/Estus-Dev/chip-8-database-rs
+[Github Badge]: https://img.shields.io/badge/github-source-%20?logo=github
