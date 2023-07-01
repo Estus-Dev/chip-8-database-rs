@@ -15,10 +15,6 @@ The goal of the rest of this crate is to help with the polish in your emulator's
 ## Usage
 
 ```rust
-# use chip_8_database_rs::Database;
-#
-# let rom = [0u8; 4096];
-#
 // The CHIP-8 Database is included in this library, no need to open or download files
 let db = Database::new();
 
