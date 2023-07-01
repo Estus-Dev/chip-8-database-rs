@@ -142,13 +142,9 @@ impl Database {
 
     /// Lookup the metadata for a specific hash string.
     pub fn get_metadata_from_hash(&self, hash: &str) -> Option<Program> {
-        log::info!("Looking up ROM with hash {hash}");
-
         self.hashes.get(hash).map(|i| {
             let mut program = self.programs[*i].clone();
             program.lookup_hash = Some(hash.to_owned());
-
-            log::info!(r#"Found ROM "{}" ({hash})"#, program.title);
 
             program
         })
