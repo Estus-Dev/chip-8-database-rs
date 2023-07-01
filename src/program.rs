@@ -17,6 +17,9 @@ pub struct Program {
     /// published it.
     pub description: Option<String>,
 
+    /// During ROM lookup, this will be populated with the hash used.
+    pub lookup_hash: Option<String>,
+
     /// The date at which the program was first released in ISO 8601 date format. Can be a year, a
     /// year and a month or a year, month and day.
     ///

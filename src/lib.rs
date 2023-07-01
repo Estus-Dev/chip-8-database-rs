@@ -144,19 +144,7 @@ impl Database {
 
         self.hashes.get(hash).map(|i| {
             let mut program = self.programs[*i].clone();
-            let rom = program
-                .roms
-                .get(hash)
-                .unwrap_or_else(|| {
-                    panic!(
-                        "Are the chip-8-database tests passing? ({})",
-                        "✔ All hashes in sha1-hashes.json point to the right programs"
-                    )
-                })
-                .clone();
-
-            program.roms = HashMap::new();
-            program.roms.insert(hash.to_owned(), rom);
+            program.lookup_hash = Some(hash.to_owned());
 
             log::info!(r#"Found ROM "{}" ({hash})"#, program.title);
 
