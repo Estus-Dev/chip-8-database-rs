@@ -1,5 +1,5 @@
 [package]
-name = "chip-8-database-rs"
+name = "chip8_db"
 version = "0.1.0"
 edition = "2021"
 
