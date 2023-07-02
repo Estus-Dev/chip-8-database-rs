@@ -1,10 +1,11 @@
 # CHIP-8 Database RS
 
 [![Github Badge][]][Github]
+[![Docs.rs Badge][]][Docs.rs]
 [![Build Badge][]][Build]
 ![License Badge][]
 [![Crates.io Badge][]][Crates.io]
-[![Docs.rs Badge][]][Docs.rs]
+
 
 Easily access the data from the [CHIP-8 Database][] from your own [CHIP-8] implementation written in Rust.
 
