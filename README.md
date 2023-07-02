@@ -1,6 +1,7 @@
 # CHIP-8 Database RS
 
 [![Github Badge][]][Github]
+[![Build Badge][]][Build]
 ![License Badge][]
 [![Crates.io Badge][]][Crates.io]
 [![Docs.rs Badge][]][Docs.rs]
@@ -46,6 +47,8 @@ While the ROM database is always enabled, there is additional data from `platfor
 chip_8_database_rs = { version = "2.0.0", features = ["extra-data"] }
 ```
 
+[Build]: https://github.com/Estus-Dev/chip-8-database-rs/actions
+[Build Badge]: https://img.shields.io/github/actions/workflow/status/Estus-Dev/chip-8-database-rs/rust.yml
 [CHIP-8]: https://chip-8.github.io/links/
 [CHIP-8 Database]: https://github.com/chip-8/chip-8-database
 [Crates.io]: https://crates.io/crates/chip8_db
