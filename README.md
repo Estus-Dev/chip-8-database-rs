@@ -48,7 +48,7 @@ chip_8_database_rs = { version = "X", features = ["extra-data"] }
 [CHIP-8]: https://chip-8.github.io/links/
 [CHIP-8 Database]: https://github.com/chip-8/chip-8-database
 [Crates.io]: https://crates.io/crates/chip8_db
-[Crates.io Badge]: https://img.shields.io/crates/d/chip8_db
+[Crates.io Badge]: https://img.shields.io/crates/v/chip8_db
 [Docs.rs]: https://docs.rs/crate/chip8_db
 [Docs.rs Badge]: https://img.shields.io/docsrs/chip8_db/latest?logo=docsdotrs
 [License Badge]: https://img.shields.io/github/license/Estus-Dev/chip-8-database-rs
