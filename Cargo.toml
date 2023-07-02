@@ -7,7 +7,7 @@ authors = ["Estus"]
 categories = ["config", "data-structures", "emulators"]
 description = "Embed the CHIP-8 DB in your own CHIP-8 implementation"
 keywords = ["CHIP-8", "metadata", "ROM", "hashes"]
-license-file = "LICENSE"
+license = "MIT"
 readme = "README.md"
 repository = "https://github.com/Estus-Dev/chip-8-database-rs"
 
