@@ -22,13 +22,14 @@
 //! let metadata = db.get_metadata(&rom);
 //!
 //! // Get metadata from a hash string
-//! let metadata = db.get_metadata_from_hash("0df2789f661358d8f7370e6cf93490c5bcd44b01").unwrap();
+//! let metadata = db.get_metadata_from_hash("0df2789f661358d8f7370e6cf93490c5bcd44b01");
+//! let program = metadata.program.unwrap();
 //!
-//! println!("ROM Title: {}", metadata.title);
+//! println!("Title: {} ({})", program.title, metadata.hash);
 //!
 //! // Most fields are optional in the base schema
-//! if let Some(description) = metadata.description {
-//!     println!("ROM Description: {description}");
+//! if let Some(description) = program.description {
+//!     println!("Description: {description}");
 //! }
 //! ```
 //!
@@ -55,6 +56,7 @@ pub mod rom;
 pub mod rotation;
 
 use program::Program;
+use rom::Rom;
 use sha1::{Digest, Sha1};
 use std::collections::HashMap;
 
@@ -130,7 +132,7 @@ impl Database {
     }
 
     /// Lookup the metadata for a specific ROM file by hashing it.
-    pub fn get_metadata(&self, rom: &[u8]) -> Option<Program> {
+    pub fn get_metadata(&self, rom: &[u8]) -> Metadata {
         let mut hasher = Sha1::new();
         hasher.update(rom);
         let hash = hasher.finalize();
@@ -141,14 +143,26 @@ impl Database {
     }
 
     /// Lookup the metadata for a specific hash string.
-    pub fn get_metadata_from_hash(&self, hash: &str) -> Option<Program> {
-        self.hashes.get(hash).map(|i| {
-            let mut program = self.programs[*i].clone();
-            program.lookup_hash = Some(hash.to_owned());
+    pub fn get_metadata_from_hash(&self, hash: &str) -> Metadata {
+        let hash = hash.to_owned();
+        let program = self.hashes.get(&hash).map(|i| self.programs[*i].clone());
+        let rom = program
+            .as_ref()
+            .and_then(|prog| prog.roms.get(&hash).cloned());
 
-            program
-        })
+        Metadata { hash, program, rom }
     }
+}
+
+pub struct Metadata {
+    /// During ROM lookup, this will be populated with the hash used.
+    pub hash: String,
+
+    /// The program matching the listed hash.
+    pub program: Option<Program>,
+
+    /// Any ROM-specific metadata, otherwise defaulting to the values in program.
+    pub rom: Option<Rom>,
 }
 
 #[cfg(test)]

@@ -27,13 +27,14 @@ let db = Database::new();
 let metadata = db.get_metadata(&rom);
 
 // Get metadata from a hash string
-let metadata = db.get_metadata_from_hash("0df2789f661358d8f7370e6cf93490c5bcd44b01").unwrap();
+let metadata = db.get_metadata_from_hash("0df2789f661358d8f7370e6cf93490c5bcd44b01");
+let program = metadata.program.unwrap();
 
-println!("ROM Title: {}", metadata.title);
+println!("Title: {} ({})", program.title, metadata.hash);
 
 // Most fields are optional in the base schema
-if let Some(description) = metadata.description {
-    println!("ROM Description: {description}");
+if let Some(description) = program.description {
+    println!("Description: {description}");
 }
 ```
 
