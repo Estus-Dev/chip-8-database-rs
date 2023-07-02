@@ -154,6 +154,7 @@ impl Database {
     }
 }
 
+/// Metadata results from a ROM lookup
 pub struct Metadata {
     /// During ROM lookup, this will be populated with the hash used.
     pub hash: String,
