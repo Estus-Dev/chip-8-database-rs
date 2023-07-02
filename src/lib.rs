@@ -39,7 +39,7 @@
 //! `quirks.json` that you can choose to include with the `extra-data` feature.
 //!
 //! ```toml
-//! chip_8_database_rs = { version = "X", features = ["extra-data"] }
+//! chip_8_database_rs = { version = "2.0.0", features = ["extra-data"] }
 //! ```
 //!
 //! [CHIP-8]: https://chip-8.github.io/links/
