@@ -6,7 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
-No changes.
+### Added
+
+- Derive basic traits on `Metadata`.
 
 ## [2.0.0] - 2023-07-02
 
