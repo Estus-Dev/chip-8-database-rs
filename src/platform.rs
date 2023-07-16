@@ -1,6 +1,7 @@
 //! Defintions related to the various CHIP-8 platforms.
 
 use serde::{Deserialize, Serialize};
+use std::fmt::Display;
 
 /// An ID for this platform, by which to reference it in a [Program].
 #[non_exhaustive]
@@ -32,6 +33,26 @@ pub enum Platform {
 
     #[serde(rename = "xochip")]
     XOChip,
+}
+
+impl Display for Platform {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Platform::OriginalChip8 => "Original CHIP-8",
+                Platform::HybridVIP => "Hybrid VIP",
+                Platform::ModernChip8 => "Modern CHIP-8",
+                Platform::Chip8X => "CHIP-8X",
+                Platform::Chip48 => "CHIP48",
+                Platform::Superchip1 => "SUPER-CHIP 1.0",
+                Platform::Superchip => "SUPER-CHIP",
+                Platform::MegaChip8 => "MEGA-CHIP",
+                Platform::XOChip => "XO-CHIP",
+            }
+        )
+    }
 }
 
 #[cfg(feature = "extra-data")]

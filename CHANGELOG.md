@@ -6,7 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
-No changes.
+### Added
+
+- Implement `Display` for `Platform`.
 
 ## [2.1.0] - 2023-07-02
 
